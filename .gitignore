@@ -1,0 +1,13 @@
+/.cache
+/.config
+/.dmrc
+/.emacs
+/.local
+/.login
+/.rhosts
+/.tcshrc
+/.vscode
+/.vscode-server
+/.wget-hsts
+/.xsession.back
+/HelloWorld
