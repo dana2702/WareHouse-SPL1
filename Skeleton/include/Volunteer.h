@@ -24,6 +24,10 @@ class Volunteer {
         virtual string toString() const = 0;
         virtual Volunteer* clone() const = 0; //Return a copy of the volunteer
 
+//extras:
+Volunteer(const Volunteer &other);
+~Volunteer();
+
     protected:
         int completedOrderId; //Initialized to NO_ORDER if no order has been completed yet
         int activeOrderId; //Initialized to NO_ORDER if no order is being processed
@@ -48,7 +52,10 @@ class CollectorVolunteer: public Volunteer {
         bool canTakeOrder(const Order &order) const override;
         void acceptOrder(const Order &order) override;
         string toString() const override;
-    
+    //extras:
+CollectorVolunteer(const CollectorVolunteer &other);
+~CollectorVolunteer();
+
     private:
         const int coolDown; // The time it takes the volunteer to process an order
         int timeLeft; // Time left until the volunteer finishes his current order
@@ -67,6 +74,10 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
         int getNumOrdersLeft() const;
         string toString() const override;
     
+//extras:
+LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other);
+~LimitedCollectorVolunteer();
+
     private:
         const int maxOrders; // The number of orders the volunteer can process in the whole simulation
         int ordersLeft; // The number of orders the volunteer can still take
@@ -88,6 +99,10 @@ class DriverVolunteer: public Volunteer {
         void step() override; // Decrease distanceLeft by distancePerStep
         string toString() const override;
 
+        //extras:
+        DriverVolunteer(const DriverVolunteer &other);
+        ~DriverVolunteer();
+
     private:
         const int maxDistance; // The maximum distance of ANY order the volunteer can take
         const int distancePerStep; // The distance the volunteer does in one step
@@ -106,6 +121,9 @@ class LimitedDriverVolunteer: public DriverVolunteer {
         void acceptOrder(const Order &order) override; // Assign distanceLeft to order's distance and decrease ordersLeft
         string toString() const override;
 
+//extras:
+        LimitedDriverVolunteer(const LimitedDriverVolunteer &other);
+         ~LimitedDriverVolunteer();
     private:
         const int maxOrders; // The number of orders the volunteer can process in the whole simulation
         int ordersLeft; // The number of orders the volunteer can still take

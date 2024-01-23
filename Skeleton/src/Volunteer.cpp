@@ -1,53 +1,41 @@
 #include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/Volunteer.h"  
 #include <iostream>
-#pragma once
+
 
 using namespace std;
-class Volunteer {
 
-    private:
-        const int id;
-        const string name;
 
-    protected:
-        int completedOrderId;
-        int activeOrderId;
-
-    public:
         // Constructor
-        Volunteer(int id, const string name)
-            : id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
+        Volunteer::Volunteer(int id, const std::string &name): id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
 
         // Copy constructor
-        Volunteer(const Volunteer &other)
-            : id(other.id), name(other.name), completedOrderId(other.completedOrderId),
-            activeOrderId(other.activeOrderId) {}
+        Volunteer::Volunteer(const Volunteer &other): id(other.id), name(other.name), completedOrderId(other.completedOrderId),activeOrderId(other.activeOrderId) {}
 
-        int getId() const{
+        int Volunteer::getId() const{
             return this->id;
         }
 
-        const string &getName() const{
+        const string& Volunteer::getName() const{
             return this->name;
         }
 
-        int getActiveOrderId() const{
+        int Volunteer::getActiveOrderId() const{
             return this->activeOrderId;
         }
 
-        int getCompletedOrderId() const{
+        int Volunteer::getCompletedOrderId() const{
             return this->completedOrderId;
         }
 
-        bool isBusy() const{
+        bool Volunteer::isBusy() const{
             return (activeOrderId != NO_ORDER);
         }
 
-        virtual bool hasOrdersLeft() const {
+        bool Volunteer::hasOrdersLeft() const {
             return true;
         }
 
-        virtual bool canTakeOrder(const Order &order) const{
+        bool Volunteer::canTakeOrder(const Order &order) const{
             if(!isBusy && hasOrdersLeft){
                 return true;
             }
@@ -55,45 +43,42 @@ class Volunteer {
             return false;
         }
 
-        virtual void acceptOrder(const Order &order){
+        void Volunteer::acceptOrder(const Order &order){
             this->activeOrderId = order.getId();
         }
 
-        virtual void step(){
+        void Volunteer::step(){
 
         }
 
-        virtual string toString(){
-            return "Volunteer";
+        string Volunteer::toString() const{
+            //return "Volunteer";
         }
 
-        virtual Volunteer* clone() const{
-            return new Volunteer(*this);
+        Volunteer* Volunteer::clone() const{
+            //return new Volunteer(*this);
         }
-};
+
+        Volunteer:: ~Volunteer() {
+            
+        }
 
 
 
-class CollectorVolunteer: public Volunteer {
-
-    private:
-        const int coolDown;
-        int timeLeft;
-
-    public:    
+  
     //constructor
-    CollectorVolunteer(int id, const string &name, int coolDown)
+    CollectorVolunteer::CollectorVolunteer(int id, const string &name, int coolDown)
         : Volunteer(id,name), coolDown(this->coolDown), timeLeft(NO_ORDER){}
 
     //copy constructor    
-    CollectorVolunteer(const CollectorVolunteer &other):
+    CollectorVolunteer::CollectorVolunteer(const CollectorVolunteer &other):
          Volunteer(other),coolDown(other.coolDown), timeLeft(other.timeLeft){}
          
-    CollectorVolunteer *clone() const{
+    CollectorVolunteer* CollectorVolunteer::clone() const{
         return new CollectorVolunteer(*this);
     }
 
-    void step(){
+    void CollectorVolunteer::step(){
         if (this->timeLeft== NO_ORDER){
             this->timeLeft= coolDown;
         }
@@ -104,15 +89,15 @@ class CollectorVolunteer: public Volunteer {
         // ........
     }
 
-    int getCoolDown() const{
+    int CollectorVolunteer::getCoolDown() const{
         return this->coolDown;
     }
 
-    int getTimeLeft() const{
+    int CollectorVolunteer::getTimeLeft() const{
         return this->timeLeft;
     }
 
-    bool decreaseCoolDown(){
+    bool CollectorVolunteer::decreaseCoolDown(){
         this->timeLeft--;
         if(this->timeLeft==0){
             return true;
@@ -120,11 +105,11 @@ class CollectorVolunteer: public Volunteer {
         return false;
     }
 
-    bool hasOrdersLeft() const{
+    bool CollectorVolunteer::hasOrdersLeft() const{
         return true;
     }
 
-    bool canTakeOrder(const Order &order) const{
+    bool CollectorVolunteer::canTakeOrder(const Order &order) const{
         if(!isBusy && hasOrdersLeft){
             return true;
         }
@@ -133,42 +118,37 @@ class CollectorVolunteer: public Volunteer {
     }
 
 
-    void acceptOrder(const Order &order){
+    void CollectorVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
     }
     
-    string toString() const{
+    string CollectorVolunteer::toString() const{
         return "CollectorVolunteer";
     }
-};
+    CollectorVolunteer:: ~CollectorVolunteer(){
+
+    }
 
 
 
-class LimitedCollectorVolunteer: public CollectorVolunteer {
 
-    private:
-        const int maxOrders;
-        int ordersLeft;
-
-
-    public: 
         //constructor    
-        LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
+        LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
             : CollectorVolunteer(id, name, coolDown), maxOrders(this->maxOrders), ordersLeft(this->maxOrders){}
 
         //copy constructor    
-        LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other)
+        LimitedCollectorVolunteer::LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other)
             : CollectorVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft){}
 
-        LimitedCollectorVolunteer *clone() const{
+        LimitedCollectorVolunteer* LimitedCollectorVolunteer::clone() const{
             return new LimitedCollectorVolunteer(*this);
         }
 
-        bool hasOrdersLeft(){
+        bool LimitedCollectorVolunteer::hasOrdersLeft() const{
             return(ordersLeft > 0);
         }
 
-        bool canTakeOrder(const Order &order) const{
+        bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const{
             if(!isBusy && hasOrdersLeft){
                 return true;
             }
@@ -176,64 +156,58 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
             return false;
         }
 
-        void acceptOrder(const Order &order){
+        void LimitedCollectorVolunteer::acceptOrder(const Order &order){
             this->ordersLeft--;
             this->activeOrderId = order.getId();
         }
 
 
-        int getMaxOrders() const{
+        int LimitedCollectorVolunteer::getMaxOrders() const{
             return this->maxOrders;
         }
 
-        int getNumOrdersLeft() const{
+        int LimitedCollectorVolunteer::getNumOrdersLeft() const{
             return this->ordersLeft;
         }
-};
+         LimitedCollectorVolunteer:: ~LimitedCollectorVolunteer(){
+        
+    }
 
 
 
 
-class DriverVolunteer: public Volunteer {
-
-    private:
-        const int maxDistance;
-        const int distancePerStep;
-        int distanceLeft;
-
-    public:    
 
     //constructor
-    DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
+    DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
         : Volunteer(id,name), maxDistance(this->maxDistance), distancePerStep(this->distancePerStep), distanceLeft(NO_ORDER){}
     
     //copy constructor
-    DriverVolunteer(const DriverVolunteer &other)
+    DriverVolunteer::DriverVolunteer(const DriverVolunteer &other)
         : Volunteer(other), maxDistance(other.maxDistance), distancePerStep(other.distancePerStep), distanceLeft(NO_ORDER){}
     
-    int getDistanceLeft() const{
+    int  DriverVolunteer::getDistanceLeft() const{
         return this->distanceLeft;
     }
 
-    int getMaxDistance() const{
+    int  DriverVolunteer::getMaxDistance() const{
         return this->maxDistance;
     }
 
-    int getDistancePerStep() const{
+    int  DriverVolunteer::getDistancePerStep() const{
         return this->distancePerStep;
     }
 
-    bool decreaseDistanceLeft(){
+    bool  DriverVolunteer::decreaseDistanceLeft(){
         this->distanceLeft =  this->distanceLeft - this->distancePerStep;
         // this.distanceLeft = this.getDistanceLeft() - this.getDistancePerStep();
         return (this->distanceLeft<=0);
     }
 
-    bool hasOrdersLeft() const{
+    bool  DriverVolunteer::hasOrdersLeft() const{
         return true;
     }
 
-    bool canTakeOrder(const Order &order) const{
+    bool  DriverVolunteer::canTakeOrder(const Order &order) const{
         if(!isBusy && hasOrdersLeft && order.getDistance() <= this->maxDistance){
             return true;
         }
@@ -241,58 +215,54 @@ class DriverVolunteer: public Volunteer {
         return false;
     }
 
-    void acceptOrder(const Order &order){
+    void  DriverVolunteer::acceptOrder(const Order &order){
         this->distanceLeft= order.getDistance();
     }
 
-    void step(){
+    void  DriverVolunteer::step(){
         // ....
     }
 
-    string toString() const{
+    string  DriverVolunteer::toString() const{
         return "DriverVolunteer";
     }
-};
+    DriverVolunteer:: ~DriverVolunteer(){
+
+    }
+    
 
 
 
 
 
-class LimitedDriverVolunteer: public DriverVolunteer {
 
-
-    private:
-        const int maxOrders;
-        int ordersLeft;
-
-    public:
 
     //constructor    
-     LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
+     LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
          : DriverVolunteer(id,name,maxDistance,distancePerStep) , maxOrders(maxOrders), ordersLeft(maxOrders){}
 
      //copy constructor  
-     LimitedDriverVolunteer(const LimitedDriverVolunteer &other)
+     LimitedDriverVolunteer::LimitedDriverVolunteer(const LimitedDriverVolunteer &other)
         : DriverVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft){}
     
-    LimitedDriverVolunteer *clone() const {
+    LimitedDriverVolunteer* LimitedDriverVolunteer::clone() const {
         return new LimitedDriverVolunteer(*this);
     }
     
-    int getMaxOrders() const{
+    int LimitedDriverVolunteer::getMaxOrders() const{
         return this->maxOrders;
     }
     
     
-    int getNumOrdersLeft() const{
+    int LimitedDriverVolunteer::getNumOrdersLeft() const{
         return this->ordersLeft;
     }
     
-    bool hasOrdersLeft() const{
+    bool LimitedDriverVolunteer::hasOrdersLeft() const{
         return (this->ordersLeft > 0);
     }
     
-    bool canTakeOrder(const Order &order) const {
+    bool LimitedDriverVolunteer::canTakeOrder(const Order &order) const {
         if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->getMaxDistance()){
             return true;
         }
@@ -300,16 +270,19 @@ class LimitedDriverVolunteer: public DriverVolunteer {
         return false;
     }
     
-        void acceptOrder(const Order &order) {
+        void LimitedDriverVolunteer::acceptOrder(const Order &order) {
             DriverVolunteer:: acceptOrder(order);
             //this->distanceLeft = order.getDistance();
             this->ordersLeft--;
         } 
-        string toString() const {
+        string LimitedDriverVolunteer::toString() const {
             return "LimitedDriverVolunteer";
         }
+         LimitedDriverVolunteer:: ~LimitedDriverVolunteer(){
+        
+    }
 
-};
+
 
 
 

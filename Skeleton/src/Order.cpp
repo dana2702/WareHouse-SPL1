@@ -3,71 +3,48 @@
 
 using namespace std;
 
-enum class OrderStatus {
-    PENDING,
-    COLLECTING,
-    DELIVERING,
-    COMPLETED,
-};
-
-
-
-class Order{
-
-
-private:
-    const int id;
-    const int customerId;
-    const int distance;
-    OrderStatus status;
-    int collectorId; 
-    int driverId; 
-
-public:
-
     //constructor
-    Order(int id, int customerId, int distance)
+    Order::Order(int id, int customerId, int distance)
         : id(id), customerId(customerId), distance(distance), status(OrderStatus::PENDING) ,collectorId(NO_VOLUNTEER), driverId(NO_VOLUNTEER){}
 
-    int getId() {
+    int Order::getId() const{
         return this->id;
     }
 
-    int getCustomerId(){
+    int Order::getCustomerId() const{
         return this->customerId;
     }
 
-    void setStatus(OrderStatus status){
+    void Order::setStatus(OrderStatus status){
         this->status = status;
     }
 
-    void setCollectorId(int collectorId){
+    void Order::setCollectorId(int collectorId){
         this->collectorId = collectorId;
     }
 
-    void setDriverId(int driverId){
+    void Order::setDriverId(int driverId){
         this->driverId = driverId;
     }
 
-    int getCollectorId() const{
+    int Order::getCollectorId() const{
         return this->collectorId;
     }
 
-    int getDriverId() const{
+    int Order::getDriverId() const{
         return this->driverId;
     }
 
-    OrderStatus getStatus() const {
+    OrderStatus Order::getStatus() const {
         return this->status;
     }
 
-    const string toString() const{
+    const string Order::toString() const{
         return "";
     }
 
     // extras:
 
-    int getDistance() const{
+    int Order::getDistance() const{
         return this->distance;
     }
-};
