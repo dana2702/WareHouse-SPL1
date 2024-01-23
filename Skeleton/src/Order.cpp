@@ -1,48 +1,73 @@
-#include "/home/users/bsc/hadassi/Skeleton/include/Order.h"
+#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/Order.h"
 #include <iostream>
 
 using namespace std;
 
-Order(int id, int customerId, int distance): id(this.id), customerId(this.customerId), distance(this.distance),status(Order.PENDING) ,collectorId(Order.NO_VOLUNTEER), driverId(Order.NO_VOLUNTEER){}
+enum class OrderStatus {
+    PENDING,
+    COLLECTING,
+    DELIVERING,
+    COMPLETED,
+};
 
-int getId() {
-    return this.id;
-}
 
-int getCustomerId(){
-    return this.customerId;
-}
 
-void setStatus(OrderStatus status){
-    this.OrderStatus = status;
-}
+class Order{
 
-void setCollectorId(int collectorId){
-    this.collectorId = collectorId;
-}
 
-void setDriverId(int driverId){
-    this.driverId = driverId;
-}
+private:
+    const int id;
+    const int customerId;
+    const int distance;
+    OrderStatus status;
+    int collectorId; 
+    int driverId; 
 
-int getCollectorId() const{
-    return this.collectorId;
-}
+public:
 
-int getDriverId() const{
-    return this.getDriverId
-}
+    //constructor
+    Order(int id, int customerId, int distance)
+        : id(id), customerId(customerId), distance(distance), status(OrderStatus::PENDING) ,collectorId(NO_VOLUNTEER), driverId(NO_VOLUNTEER){}
 
-OrderStatus getStatus() const {
-    return this.status;
-}
+    int getId() {
+        return this->id;
+    }
 
-const string toString() const{
-    return "";
-}
+    int getCustomerId(){
+        return this->customerId;
+    }
 
-// extras:
+    void setStatus(OrderStatus status){
+        this->status = status;
+    }
 
-int getDistance() const{
-    return this.distance;
-}
+    void setCollectorId(int collectorId){
+        this->collectorId = collectorId;
+    }
+
+    void setDriverId(int driverId){
+        this->driverId = driverId;
+    }
+
+    int getCollectorId() const{
+        return this->collectorId;
+    }
+
+    int getDriverId() const{
+        return this->driverId;
+    }
+
+    OrderStatus getStatus() const {
+        return this->status;
+    }
+
+    const string toString() const{
+        return "";
+    }
+
+    // extras:
+
+    int getDistance() const{
+        return this->distance;
+    }
+};
