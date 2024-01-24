@@ -1,7 +1,5 @@
-#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/Volunteer.h"  
+#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/Volunteer.h"
 #include <iostream>
-
-
 using namespace std;
 
 
@@ -36,11 +34,11 @@ using namespace std;
         }
 
         bool Volunteer::canTakeOrder(const Order &order) const{
-            if(!isBusy && hasOrdersLeft){
+            if(!isBusy() && hasOrdersLeft()){
                 return true;
-            }
+            }else{return false;}
 
-            return false;
+            
         }
 
         void Volunteer::acceptOrder(const Order &order){
@@ -110,7 +108,7 @@ using namespace std;
     }
 
     bool CollectorVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy && hasOrdersLeft){
+        if(!isBusy() && hasOrdersLeft()){
             return true;
         }
 
@@ -149,7 +147,7 @@ using namespace std;
         }
 
         bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const{
-            if(!isBusy && hasOrdersLeft){
+            if(!isBusy() && hasOrdersLeft()){
                 return true;
             }
 
@@ -208,7 +206,7 @@ using namespace std;
     }
 
     bool  DriverVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy && hasOrdersLeft && order.getDistance() <= this->maxDistance){
+        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->maxDistance){
             return true;
         }
 

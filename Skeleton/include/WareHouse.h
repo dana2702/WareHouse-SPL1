@@ -24,6 +24,7 @@ class WareHouse {
         const vector<BaseAction*> &getActions() const;
         void close();
         void open();
+        void parseText(const string &configFilePath);
 
     private:
         bool isOpen;

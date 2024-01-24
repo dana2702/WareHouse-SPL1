@@ -1,4 +1,4 @@
-all: clean compile link
+all: compile link clean
 
 link:
 	g++ -o bin/runHere bin/main.o bin/Order.o bin/Customer.o bin/Volunteer.o bin/Action.o bin/parse.o
@@ -8,7 +8,6 @@ compile:
 	
 	g++ -g -Wall -Weffc++ -c -o bin/Volunteer.o src/Volunteer.cpp
 	g++ -g -Wall -Weffc++ -c -o bin/Action.o src/Action.cpp
-	g++ -g -Wall -Weffc++ -c -o bin/parse.o src/parse.cpp
 	g++ -g -Wall -Weffc++ -c -o bin/main.o src/main.cpp
 	g++ -g -Wall -Weffc++ -c -o bin/Customer.o src/Customer.cpp
 
