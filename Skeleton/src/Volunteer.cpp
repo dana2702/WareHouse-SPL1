@@ -1,4 +1,4 @@
-#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/Volunteer.h"
+#include "Volunteer.h"
 #include <iostream>
 using namespace std;
 
