@@ -87,9 +87,9 @@ void WareHouse::start(){
 
 
 
-     void WareHouse::addOrder(Order* order){
+    //  void WareHouse::addOrder(Order* order){
 
-     }
+    //  }
 
 };
 
