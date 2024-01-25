@@ -11,11 +11,7 @@ using namespace std;
     Customer::Customer(int id, const string &name, int locationDistance, int maxOrders)
         : id(id), name(name), locationDistance(locationDistance), maxOrders(maxOrders), ordersId() {}
 
-    // Copy constructor
-    Customer::Customer(const Customer &other)
-        : id(other.id), name(other.name), locationDistance(other.locationDistance),
-          maxOrders(other.maxOrders), ordersId(other.ordersId) {}
-    
+
     
 
 
@@ -66,17 +62,10 @@ int Customer::addOrder(int orderId){
     return -1;
 }
 
-Customer* Customer::clone() const{
-    //return new Customer(*this);
-} 
-
-
     // constructor
     SoldierCustomer::SoldierCustomer(int id, const string &name, int locationDistance, int maxOrders)
         : Customer(id, name, locationDistance, maxOrders) {}
 
-    // Copy constructor
-    SoldierCustomer::SoldierCustomer(const SoldierCustomer &other) : Customer(other) {}
 
     SoldierCustomer* SoldierCustomer::clone() const {
             return new SoldierCustomer(*this);
@@ -87,9 +76,6 @@ Customer* Customer::clone() const{
     //constructor
     CivilianCustomer::CivilianCustomer(int id, const string &name, int locationDistance, int maxOrders) 
             :Customer(id, name, locationDistance, maxOrders){}
-
-    //copy constructor
-    CivilianCustomer::CivilianCustomer(const CivilianCustomer &other): Customer(other){}
 
     CivilianCustomer* CivilianCustomer::clone() const {
             return new CivilianCustomer(*this);

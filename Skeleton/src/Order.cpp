@@ -40,7 +40,7 @@ using namespace std;
     }
 
     const string Order::toString() const{
-        return "";
+        return "Order";
     }
 
     // extras:

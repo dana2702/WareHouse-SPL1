@@ -1,13 +1,13 @@
 #include "Volunteer.h"
 #include <iostream>
 using namespace std;
+using std:: string;
+using std:: vector;
+#include<sstream>
 
 
         // Constructor
-        Volunteer::Volunteer(int id, const std::string &name): id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
-
-        // Copy constructor
-        Volunteer::Volunteer(const Volunteer &other): id(other.id), name(other.name), completedOrderId(other.completedOrderId),activeOrderId(other.activeOrderId) {}
+        Volunteer::Volunteer(int id, const std::string &name):  id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
 
         int Volunteer::getId() const{
             return this->id;
@@ -29,36 +29,7 @@ using namespace std;
             return (activeOrderId != NO_ORDER);
         }
 
-        bool Volunteer::hasOrdersLeft() const {
-            return true;
-        }
-
-        bool Volunteer::canTakeOrder(const Order &order) const{
-            if(!isBusy() && hasOrdersLeft()){
-                return true;
-            }else{return false;}
-
-            
-        }
-
-        void Volunteer::acceptOrder(const Order &order){
-            this->activeOrderId = order.getId();
-        }
-
-        void Volunteer::step(){
-
-        }
-
-        string Volunteer::toString() const{
-            //return "Volunteer";
-        }
-
-        Volunteer* Volunteer::clone() const{
-            //return new Volunteer(*this);
-        }
-
-        Volunteer:: ~Volunteer() {
-            
+        Volunteer:: ~Volunteer() {            
         }
 
 
@@ -68,23 +39,24 @@ using namespace std;
     CollectorVolunteer::CollectorVolunteer(int id, const string &name, int coolDown)
         : Volunteer(id,name), coolDown(this->coolDown), timeLeft(NO_ORDER){}
 
-    //copy constructor    
-    CollectorVolunteer::CollectorVolunteer(const CollectorVolunteer &other):
-         Volunteer(other),coolDown(other.coolDown), timeLeft(other.timeLeft){}
-         
     CollectorVolunteer* CollectorVolunteer::clone() const{
         return new CollectorVolunteer(*this);
     }
 
     void CollectorVolunteer::step(){
-        if (this->timeLeft== NO_ORDER){
-            this->timeLeft= coolDown;
-        }
-        this->timeLeft--;
-        if(this->timeLeft==0){
-            // the collector finished his job - send back the order to pending (activeOrderId)
-        }
+
+
         // ........
+        if(decreaseCoolDown()){
+            // send the order to driver (pending)
+            completedOrderId++;
+        }
+        else {
+            // work on the order
+        }
+
+
+        
     }
 
     int CollectorVolunteer::getCoolDown() const{
@@ -94,6 +66,11 @@ using namespace std;
     int CollectorVolunteer::getTimeLeft() const{
         return this->timeLeft;
     }
+
+     void CollectorVolunteer::setTimeLeft(int newTimeLeft){
+        this->timeLeft = newTimeLeft;
+     }
+
 
     bool CollectorVolunteer::decreaseCoolDown(){
         this->timeLeft--;
@@ -118,6 +95,7 @@ using namespace std;
 
     void CollectorVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
+        this->timeLeft = coolDown;
     }
     
     string CollectorVolunteer::toString() const{
@@ -130,13 +108,10 @@ using namespace std;
 
 
 
+
         //constructor    
         LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
             : CollectorVolunteer(id, name, coolDown), maxOrders(this->maxOrders), ordersLeft(this->maxOrders){}
-
-        //copy constructor    
-        LimitedCollectorVolunteer::LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other)
-            : CollectorVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft){}
 
         LimitedCollectorVolunteer* LimitedCollectorVolunteer::clone() const{
             return new LimitedCollectorVolunteer(*this);
@@ -157,6 +132,7 @@ using namespace std;
         void LimitedCollectorVolunteer::acceptOrder(const Order &order){
             this->ordersLeft--;
             this->activeOrderId = order.getId();
+            setTimeLeft(getCoolDown());
         }
 
 
@@ -179,10 +155,7 @@ using namespace std;
     DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
         : Volunteer(id,name), maxDistance(this->maxDistance), distancePerStep(this->distancePerStep), distanceLeft(NO_ORDER){}
     
-    //copy constructor
-    DriverVolunteer::DriverVolunteer(const DriverVolunteer &other)
-        : Volunteer(other), maxDistance(other.maxDistance), distancePerStep(other.distancePerStep), distanceLeft(NO_ORDER){}
-    
+
     int  DriverVolunteer::getDistanceLeft() const{
         return this->distanceLeft;
     }
@@ -195,9 +168,13 @@ using namespace std;
         return this->distancePerStep;
     }
 
+    void DriverVolunteer::setDistanceLeft(int newDistanceLeft){
+        this->distanceLeft = newDistanceLeft;
+    }
+
+
     bool  DriverVolunteer::decreaseDistanceLeft(){
         this->distanceLeft =  this->distanceLeft - this->distancePerStep;
-        // this.distanceLeft = this.getDistanceLeft() - this.getDistancePerStep();
         return (this->distanceLeft<=0);
     }
 
@@ -214,11 +191,20 @@ using namespace std;
     }
 
     void  DriverVolunteer::acceptOrder(const Order &order){
+        this->activeOrderId = order.getId();
         this->distanceLeft= order.getDistance();
     }
 
     void  DriverVolunteer::step(){
-        // ....
+        if(decreaseDistanceLeft()){
+            if(this->completedOrderId==-1){
+                this->completedOrderId=0;
+            }
+            this->completedOrderId++;
+        }
+        else{
+            //....
+        }
     }
 
     string  DriverVolunteer::toString() const{
@@ -239,10 +225,6 @@ using namespace std;
      LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
          : DriverVolunteer(id,name,maxDistance,distancePerStep) , maxOrders(maxOrders), ordersLeft(maxOrders){}
 
-     //copy constructor  
-     LimitedDriverVolunteer::LimitedDriverVolunteer(const LimitedDriverVolunteer &other)
-        : DriverVolunteer(other), maxOrders(other.maxOrders), ordersLeft(other.ordersLeft){}
-    
     LimitedDriverVolunteer* LimitedDriverVolunteer::clone() const {
         return new LimitedDriverVolunteer(*this);
     }
@@ -269,8 +251,8 @@ using namespace std;
     }
     
         void LimitedDriverVolunteer::acceptOrder(const Order &order) {
-            DriverVolunteer:: acceptOrder(order);
-            //this->distanceLeft = order.getDistance();
+            this->activeOrderId= order.getId();
+            setDistanceLeft(order.getDistance());
             this->ordersLeft--;
         } 
         string LimitedDriverVolunteer::toString() const {

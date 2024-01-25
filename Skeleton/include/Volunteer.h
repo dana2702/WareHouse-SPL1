@@ -55,6 +55,8 @@ class CollectorVolunteer: public Volunteer {
     //extras:
 CollectorVolunteer(const CollectorVolunteer &other);
 ~CollectorVolunteer();
+        void setTimeLeft(int newTimeLeft);
+    
 
     private:
         const int coolDown; // The time it takes the volunteer to process an order
