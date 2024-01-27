@@ -53,7 +53,6 @@ class CollectorVolunteer: public Volunteer {
         void acceptOrder(const Order &order) override;
         string toString() const override;
     //extras:
-CollectorVolunteer(const CollectorVolunteer &other);
 ~CollectorVolunteer();
         void setTimeLeft(int newTimeLeft);
     
@@ -104,6 +103,7 @@ class DriverVolunteer: public Volunteer {
         //extras:
         DriverVolunteer(const DriverVolunteer &other);
         virtual ~DriverVolunteer();
+        void setDistanceLeft(int newDistanceLeft);
 
     private:
         const int maxDistance; // The maximum distance of ANY order the volunteer can take

@@ -6,8 +6,8 @@ using std:: vector;
 #include<sstream>
 
 
-        // Constructor
-        Volunteer::Volunteer(int id, const std::string &name):  id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
+    // Constructor
+    Volunteer::Volunteer(int id, const std::string &name):  id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
 
         int Volunteer::getId() const{
             return this->id;
@@ -37,7 +37,7 @@ using std:: vector;
   
     //constructor
     CollectorVolunteer::CollectorVolunteer(int id, const string &name, int coolDown)
-        : Volunteer(id,name), coolDown(this->coolDown), timeLeft(NO_ORDER){}
+        : Volunteer(id,name), coolDown(coolDown), timeLeft(NO_ORDER){}
 
     CollectorVolunteer* CollectorVolunteer::clone() const{
         return new CollectorVolunteer(*this);
@@ -109,9 +109,9 @@ using std:: vector;
 
 
 
-        //constructor    
-        LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
-            : CollectorVolunteer(id, name, coolDown), maxOrders(this->maxOrders), ordersLeft(this->maxOrders){}
+//constructor    
+LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
+    : CollectorVolunteer(id, name, coolDown), maxOrders(maxOrders), ordersLeft(maxOrders){}
 
         LimitedCollectorVolunteer* LimitedCollectorVolunteer::clone() const{
             return new LimitedCollectorVolunteer(*this);
@@ -151,9 +151,9 @@ using std:: vector;
 
 
 
-    //constructor
-    DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
-        : Volunteer(id,name), maxDistance(this->maxDistance), distancePerStep(this->distancePerStep), distanceLeft(NO_ORDER){}
+//constructor
+DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
+    : Volunteer(id,name), maxDistance(maxDistance), distancePerStep(distancePerStep), distanceLeft(NO_ORDER){}
     
 
     int  DriverVolunteer::getDistanceLeft() const{
@@ -221,9 +221,9 @@ using std:: vector;
 
 
 
-    //constructor    
-     LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
-         : DriverVolunteer(id,name,maxDistance,distancePerStep) , maxOrders(maxOrders), ordersLeft(maxOrders){}
+//constructor    
+LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
+    : DriverVolunteer(id,name,maxDistance,distancePerStep) , maxOrders(maxOrders), ordersLeft(maxOrders){}
 
     LimitedDriverVolunteer* LimitedDriverVolunteer::clone() const {
         return new LimitedDriverVolunteer(*this);

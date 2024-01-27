@@ -7,76 +7,70 @@
 using namespace std;
 
 
-    // Constructor
-    Customer::Customer(int id, const string &name, int locationDistance, int maxOrders)
-        : id(id), name(name), locationDistance(locationDistance), maxOrders(maxOrders), ordersId() {}
+// Constructor
+Customer::Customer(int id, const string &name, int locationDistance, int maxOrders)
+     : id(id), name(name), locationDistance(locationDistance), maxOrders(maxOrders), ordersId() {}
 
 
-    
+    int Customer::getId() const{
+        return this->id;
+    }
 
+    const string& Customer::getName() const{
+        return this->name;
+    }
 
- int Customer::getId() const{
-    return this->id;
- }
+    int Customer::getCustomerDistance() const{
+        return this->locationDistance;
+    }
 
-const string& Customer::getName() const{
-    return this->name;
-}
+    int Customer::getMaxOrders() const{
+        return this->maxOrders;
+    }
 
-int Customer::getCustomerDistance() const{
-    return this->locationDistance;
-}
+    int Customer::getNumOrders() const{
+        return this->ordersId.size();
+    } 
+            
+    bool Customer::canMakeOrder() const{
+        if (this->getNumOrders() < this->getMaxOrders()){
+            return true;
+        }
+        return false;
+    }
 
-int Customer::getMaxOrders() const{
-    return this->maxOrders;
-}
+    const vector<int>& Customer::getOrdersIds() const{
+        return this->ordersId;
+    }
 
-int Customer::getNumOrders() const{
-    return this->ordersId.size();
-} 
+    int Customer::addOrder(int orderId){
         
-bool Customer::canMakeOrder() const{
-    if (this->getNumOrders() < this->getMaxOrders())
-    {
-        return true;
+        for (int i = 0; i < ordersId.size(); i++){
+            if (ordersId.at(i)==orderId){
+                if(this->canMakeOrder()){
+                    this->ordersId.push_back(orderId);
+                    return orderId;
+                }
+            }    
+        }
+        return -1;
     }
-    return false;
-}
 
-const vector<int>& Customer::getOrdersIds() const{
-    return this->ordersId;
-}
-
-int Customer::addOrder(int orderId){
-    
-    for (int i = 0; i < ordersId.size(); i++)
-    {
-        if (ordersId.at(i)==orderId)
-        {
-            if(this->canMakeOrder()){
-            this->ordersId.push_back(orderId);
-            return orderId;
-            }
-        }    
-    }
-    return -1;
-}
-
-    // constructor
-    SoldierCustomer::SoldierCustomer(int id, const string &name, int locationDistance, int maxOrders)
-        : Customer(id, name, locationDistance, maxOrders) {}
+// constructor
+SoldierCustomer::SoldierCustomer(int id, const string &name, int locationDistance, int maxOrders)
+    : Customer(id, name, locationDistance, maxOrders) {}
 
 
     SoldierCustomer* SoldierCustomer::clone() const {
-            return new SoldierCustomer(*this);
+        return new SoldierCustomer(*this);
     }
 
 
 
-    //constructor
-    CivilianCustomer::CivilianCustomer(int id, const string &name, int locationDistance, int maxOrders) 
-            :Customer(id, name, locationDistance, maxOrders){}
+//constructor
+CivilianCustomer::CivilianCustomer(int id, const string &name, int locationDistance, int maxOrders) 
+    :Customer(id, name, locationDistance, maxOrders){}
 
     CivilianCustomer* CivilianCustomer::clone() const {
-            return new CivilianCustomer(*this);
+        return new CivilianCustomer(*this);
     }

@@ -26,6 +26,16 @@ class WareHouse {
         void open();
         void parseText(const string &configFilePath);
 
+        //extras
+        vector<Customer*> getCustomerVector();
+        vector<Volunteer*> getvolunteersVector();
+        vector<BaseAction*> getActionsLog();
+        vector<Order*> getPendingOrderVector();
+        int getOrderCounter();
+        int getVolunteerCounter();
+        int getCustomerCounter();
+        int extractNumber(const std::string& str);
+
     private:
         bool isOpen;
         vector<BaseAction*> actionsLog;
@@ -36,4 +46,7 @@ class WareHouse {
         vector<Customer*> customers;
         int customerCounter; //For assigning unique customer IDs
         int volunteerCounter; //For assigning unique volunteer IDs
+
+        // extra
+        int orderCounter;
 };
