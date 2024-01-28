@@ -1,4 +1,6 @@
 #include "WareHouse.h"
+#include "Action.h"
+
 #include <fstream>
 #include <iostream>
 using std:: string;
@@ -8,76 +10,80 @@ using std:: string;
 WareHouse::WareHouse(const string &configFilePath)
 : isOpen(false), actionsLog(actionsLog),volunteers(volunteers),pendingOrders(pendingOrders),inProcessOrders(inProcessOrders),completedOrders(completedOrders),customers(customers) ,customerCounter(0),volunteerCounter(0),orderCounter(0){}
 
-    int extractNumber(const std::string& str) {
-    std::istringstream iss(str);
-    std::string token;
-
-    // Skip the first token ("step")
-    iss >> token;
-
-    // Extract the number
-    int number;
-    if (iss >> number) {
-        return number;
-    }
-}
     
-    void WareHouse::start(){
-      std::string str;
-        std::cout << "Enter action: ";
-        std::getline(std::cin, str);
-        std::cout << "You entered: " << str << std::endl;
+void WareHouse::start(){
+    std::string input;
+    std::cout << "Enter action: ";
+    std::getline(std::cin, input);
 
-        // Extract the action (first word)
-        std::istringstream iss(str);
-        std::string action;
-        iss >> action;
+    // Extract the action (first word)
+    std::istringstream iss(input);
+    std::string action;
+    iss >> action;
 
-        // Perform actions based on the first word
-        if (action == "step") {
-            // Extract the number for step action
-            int number;
-            if (iss >> number) {
-                std::cout << "Performing step action with number: " << number << std::endl;
-                // Your code for 'step' action here
-            } else {
-                std::cout << "Invalid input: No number found for 'step' action." << std::endl;
-                return 1; // Return error code
-            }
-        } else if (action == "order") {
-            // Extract the number for order action
-            int number;
-            if (iss >> number) {
-                std::cout << "Performing order action with number: " << number << std::endl;
-                // Your code for 'order' action here
-            } else {
-                std::cout << "Invalid input: No number found for 'order' action." << std::endl;
-                return 1; // Return error code
-            }
+    // Perform actions based on the first word
+    if (action == "step") {
+        // Extract the number for step action
+        int number;
+        if (iss >> number) {
+            std::cout << "Performing step action with number: " << number << std::endl;
+            // the code for 'step' action here
+            SimulateStep* step = new SimulateStep(number);
+            step->act(*this);
+        } 
+    } 
+
+
+    else if (action == "order") {
+        // Extract the number for order action
+        int number;
+        if (iss >> number) {
+            AddOrder* order = new AddOrder(number);
+            order->act(*this); 
+        }      
+    }  
+
+
+    else if (action =="customer"){  
+        // Extract the number for step action
+        std::string *name;
+       // iss >> *name;
+        std::string *type;
+        //iss >> *type;
+        int distance;
+        //iss >> distance;
+        int maxOrd;
+        //iss >> maxOrd;
+        if(iss >> *name >> *type >> distance >> maxOrd){
+            AddCustomer* cust = new AddCustomer(*name,*type, distance, maxOrd);
+            cust->act(*this);
+        }
         
-
-       
     }
 
+    else if (action =="orderStatus"){
+        // Extract the number for orderStatus action
+        int number;
+        if (iss >> number) {
+            // if the provided order ID doesn’t exist: ”Cannot place this order”.
+            if (number > orderCounter){
+                std::cout << "Cannot place this order" << std::endl;
+            }
+            // the id is ok
+            else{
+                    // לופ על כל רשימה ואם מוצאים א ההזמנה מחזירים את הסטטוס- שם הרשימה
+                }
+            }
+        }    
+    
+
+    else if (action =="customerStatus"){  
+    }
         
-        
-        else if (action =="order"){
+    else if (action =="volunteerStatus"){  
+    }
 
-        }  
-
-        else if (action =="customer"){  
-        }
-
-        else if (action =="orderStatus"){  
-        }
-
-        else if (action =="customerStatus"){  
-        }
-        
-        else if (action =="volunteerStatus"){  
-        }
-
-        else if (action =="log"){  
+    else if (action =="log"){  
 
             // for (int i = 0; i < actionsLog.size(); i++)
             // {
@@ -105,7 +111,7 @@ WareHouse::WareHouse(const string &configFilePath)
 
 
     
-
+}
 };
 int WareHouse::getOrderCounter(){
     return orderCounter;
@@ -118,6 +124,3 @@ int WareHouse::getVolunteerCounter(){
 int WareHouse::getCustomerCounter(){
     return customerCounter;
 }
-
-
-

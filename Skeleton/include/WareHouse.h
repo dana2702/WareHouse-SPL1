@@ -34,7 +34,7 @@ class WareHouse {
         int getOrderCounter();
         int getVolunteerCounter();
         int getCustomerCounter();
-        int extractNumber(const std::string& str);
+        int extractNumber(const std::string& str); //extract the number from the input command
 
     private:
         bool isOpen;
