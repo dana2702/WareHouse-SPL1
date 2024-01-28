@@ -31,6 +31,7 @@ class WareHouse {
         vector<Volunteer*> getvolunteersVector();
         vector<BaseAction*> getActionsLog();
         vector<Order*> getPendingOrderVector();
+        vector<Order*> getinProcessOrdersVector();
         int getOrderCounter();
         int getVolunteerCounter();
         int getCustomerCounter();

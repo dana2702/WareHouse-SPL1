@@ -40,6 +40,11 @@ void WareHouse::start(){
         if (iss >> number) {
             AddOrder* order = new AddOrder(number);
             order->act(*this); 
+            if(order->getStatus() == ActionStatus::COMPLETED){
+                orderCounter++;
+            }
+            actionsLog.push_back(order);
+
         }      
     }  
 
@@ -57,23 +62,21 @@ void WareHouse::start(){
         if(iss >> *name >> *type >> distance >> maxOrd){
             AddCustomer* cust = new AddCustomer(*name,*type, distance, maxOrd);
             cust->act(*this);
+            if(cust->getStatus() == ActionStatus::COMPLETED){
+                customerCounter++;
+            }
+           actionsLog.push_back(cust);
         }
         
     }
 
-    else if (action =="orderStatus"){
+    else if (action =="orderStatus"){  
         // Extract the number for orderStatus action
         int number;
         if (iss >> number) {
-            // if the provided order ID doesn’t exist: ”Cannot place this order”.
-            if (number > orderCounter){
-                std::cout << "Cannot place this order" << std::endl;
-            }
-            // the id is ok
-            else{
-                    // לופ על כל רשימה ואם מוצאים א ההזמנה מחזירים את הסטטוס- שם הרשימה
-                }
-            }
+            PrintOrderStatus* print = new PrintOrderStatus(number);
+            print->act(*this);
+           actionsLog.push_back(print);
         }    
     
 
@@ -121,6 +124,7 @@ int WareHouse::getVolunteerCounter(){
     return volunteerCounter;
 };
 
-int WareHouse::getCustomerCounter(){
-    return customerCounter;
+vector<Order*> WareHouse::getinProcessOrdersVector(){
+    return inProcessOrders;
 }
+
