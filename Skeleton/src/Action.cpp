@@ -46,6 +46,7 @@ void AddOrder::act(WareHouse &wareHouse){
                 std::cout << "Performing order action with number: " << customerId << std::endl;
                 // the code for 'order' action here
                 Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
+                cus->addOrder(newOrder->getId());
                 wareHouse.getPendingOrderVector().push_back(newOrder);
                 complete();
             }
@@ -90,10 +91,9 @@ AddCustomer::AddCustomer(const string &customerName, const string &customerType,
             wareHouse.getCustomerVector().push_back(cust);
         }else{
             CivilianCustomer* cust = new CivilianCustomer( wareHouse.getCustomerCounter(), customerName, distance, maxOrders);
-             wareHouse.getCustomerVector().push_back(cust);
+            wareHouse.getCustomerVector().push_back(cust);
         }
         complete();
-
     }
 
     AddCustomer* AddCustomer::clone() const{
@@ -114,46 +114,41 @@ AddCustomer::AddCustomer(const string &customerName, const string &customerType,
 PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 
     void PrintOrderStatus::act(WareHouse &wareHouse){
-        // std::cout << "OrderId: " << orderId << std::endl;
-        // for (Order* or :  wareHouse->pendingOrders) {
-        // if(or->getId() == orderId){
-        // std::cout << "OrderStatus: pending"  << std::endl;
-        // }
 
-        // if the provided order ID doesn’t exist: ”Cannot place this order”.
-            if (orderId > wareHouse.getOrderCounter()){
-                error("Cannot place this order");
-                std::cout << getErrorMsg() << std::endl;            }
-            // the id is ok
-            else{
-                std::cout << "OrderId:"<< orderId << std::endl;
-                for(Order* ord : wareHouse.getPendingOrderVector()){
-                    if(ord->getId() == orderId){
-                        std::cout << "OrderStatus: PENDING"<<  std::endl;
-                        std::cout << "CustomerID: "<< ord->getCustomerId()<<  std::endl;  
-                        if( ord->getCollectorId() == NO_VOLUNTEER){
-                            std::cout << "CollectorID: none"<<  std::endl;
-                        }else{
-                            std::cout << "Collector: "<< ord->getCollectorId()<<  std::endl;
-                        }
-                        if( ord->getDriverId() == NO_VOLUNTEER){
-                            std::cout << "DriverID: none"<<  std::endl;
-                        }else{
-                            std::cout << "DriverID: "<< ord->getDriverId()<<  std::endl;
-                        }
-
+    // if the provided order ID doesn’t exist: ”Cannot place this order”.
+        if (orderId > wareHouse.getOrderCounter()){
+            error("Order doesn't exist");
+            std::cout << getErrorMsg() << std::endl;           
+         }
+        // the id is ok
+        else{
+            bool flag = false;
+            std::cout << "OrderId:"<< orderId << std::endl;
+            for(Order* ord : wareHouse.getPendingOrderVector()){
+                if(ord->getId() == orderId){
+                    std::cout << "OrderStatus: PENDING"<<  std::endl;
+                    std::cout << "CustomerID: "<< ord->getCustomerId()<<  std::endl;  
+                    if(ord->getCollectorId() == NO_VOLUNTEER){
+                        std::cout << "CollectorID: none"<<  std::endl;
+                    }else{
+                        std::cout << "Collector: "<< ord->getCollectorId()<<  std::endl;
                     }
+                    if( ord->getDriverId() == NO_VOLUNTEER){
+                        std::cout << "DriverID: none"<<  std::endl;
+                    }else{
+                        std::cout << "DriverID: "<< ord->getDriverId()<<  std::endl;
+                    }
+                    flag=true;
                 }
-
+            }
+            if(!flag){
                 for(Order* ord : wareHouse.getinProcessOrdersVector()){
                     if(ord->getId() == orderId){
                         if(ord->getStatus() == OrderStatus::COLLECTING){
-                        std::cout << "OrderStatus: COLLECTING"<<  std::endl;
-
+                            std::cout << "OrderStatus: COLLECTING"<<  std::endl;
                         }
                         else if (ord->getStatus() == OrderStatus::DELIVERING){
                             std::cout << "OrderStatus: DELIVERING"<<  std::endl;
-
                         }
                         std::cout << "CustomerID: "<< ord->getCustomerId()<<  std::endl;  
                         if( ord->getCollectorId() == NO_VOLUNTEER){
@@ -166,29 +161,33 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
                         }else{
                             std::cout << "DriverID: "<< ord->getDriverId()<<  std::endl;
                         }
-
+                        flag=true;
                     }
-                }
-
-                  for(Order* ord : wareHouse.getCompOrderVector()){
+                }  
+            }
+            
+            if(!flag){
+                for(Order* ord : wareHouse.getCompletedOrdersVector()){
                     if(ord->getId() == orderId){
                         std::cout << "OrderStatus: COMPLETED"<<  std::endl;
                         std::cout << "CustomerID: "<< ord->getCustomerId()<<  std::endl;  
-                        if( ord->getCollectorId() == NO_VOLUNTEER){
-                            std::cout << "CollectorID: none"<<  std::endl;
-                        }else{
-                            std::cout << "Collector: "<< ord->getCollectorId()<<  std::endl;
-                        }
-                        if( ord->getDriverId() == NO_VOLUNTEER){
-                            std::cout << "DriverID: none"<<  std::endl;
-                        }else{
-                            std::cout << "DriverID: "<< ord->getDriverId()<<  std::endl;
-                        }
-
+                        std::cout << "Collector: "<< ord->getCollectorId()<<  std::endl;
+                        std::cout << "DriverID: "<< ord->getDriverId()<<  std::endl;
                     }
                 }
+            } 
+
+            if (flag)
+            {
+                complete();
             }
-    }
+            else{
+                error("Order doesn't exist");
+                std::cout << getErrorMsg() << std::endl;           
+            }
+              
+        }
+    };
 
 
     PrintOrderStatus* PrintOrderStatus::clone() const{
@@ -205,6 +204,40 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){}
 
     void PrintCustomerStatus::act(WareHouse &wareHouse) {
+         // if the provided customer ID doesn’t exist: ”Cannot place this order”.
+        if (customerId > wareHouse.getCustomerCounter()){
+            error("Customer doesn't exist");
+            std::cout << getErrorMsg() << std::endl;           
+        }
+        // the id is ok
+        else{
+            std::cout << "CustomerID:"<< customerId << std::endl;
+            for(Order* ord : wareHouse.getPendingOrderVector()){
+                if(ord->getCustomerId() == customerId){
+                    std::cout << "OrderID: "<< ord->getId()<<  std::endl;
+                    std::cout << "OrderStatus: PENDING"<<  std::endl;
+                }
+            }
+            for(Order* ord : wareHouse.getinProcessOrdersVector()){
+                    if(ord->getCustomerId() == customerId){
+                        std::cout << "OrderID: "<< ord->getId()<<  std::endl;  
+                        if(ord->getStatus() == OrderStatus::COLLECTING){
+                            std::cout << "OrderStatus: COLLECTING"<<  std::endl;
+                        }
+                        else if (ord->getStatus() == OrderStatus::DELIVERING){
+                            std::cout << "OrderStatus: DELIVERING"<<  std::endl;
+                        }
+                    }
+            }  
+            for(Order* ord : wareHouse.getCompletedOrdersVector()){
+                    if(ord->getCustomerId() == customerId){
+                    std::cout << "OrderID: "<< ord->getId()<<  std::endl;
+                    std::cout << "OrderStatus: COMPLETED"<<  std::endl;
+                    }
+            }
+            complete();
+        }
+        
     }
 
 
@@ -224,6 +257,33 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){
 PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
 
     void PrintVolunteerStatus:: act(WareHouse &wareHouse){
+        // if the provided Volunteer ID doesn’t exist: ”Cannot place this order”.
+        if (volunteerId > wareHouse.getVolunteerCounter()){
+            error("Volunteer doesn’t exist");
+            std::cout << getErrorMsg() << std::endl;
+        }
+        // the id is ok
+        else{
+            for(Volunteer* vol : wareHouse.getvolunteersVector()){
+                if(vol->getId()){
+                    // if the customer reaches his maxOrders limit: ”Cannot place this order”.
+                    if (cus->getOrdersIds().size() < cus->getMaxOrders())
+                    {
+                        error("Cannot place this order");
+                    }
+                }    // the input is ok
+                else{
+                    std::cout << "Performing order action with number: " << customerId << std::endl;
+                    // the code for 'order' action here
+                    Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
+                    cus->addOrder(newOrder->getId());
+                    wareHouse.getPendingOrderVector().push_back(newOrder);
+                    complete();
+                }
+            }
+        }
+
+
     }
 
 
@@ -306,4 +366,4 @@ RestoreWareHouse::RestoreWareHouse(){}
 
     string RestoreWareHouse::toString() const{
         return "RestoreWareHouse";
-    }
+}

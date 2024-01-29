@@ -25,7 +25,6 @@ class Volunteer {
         virtual Volunteer* clone() const = 0; //Return a copy of the volunteer
 
 //extras:
-        Volunteer(const Volunteer &other);
         virtual ~Volunteer();
 
     protected:
@@ -76,7 +75,6 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
         string toString() const override;
     
 //extras:
-    LimitedCollectorVolunteer(const LimitedCollectorVolunteer &other);
     virtual ~LimitedCollectorVolunteer();
 
     private:
@@ -101,7 +99,6 @@ class DriverVolunteer: public Volunteer {
         string toString() const override;
 
         //extras:
-        DriverVolunteer(const DriverVolunteer &other);
         virtual ~DriverVolunteer();
         void setDistanceLeft(int newDistanceLeft);
 
@@ -123,8 +120,7 @@ class LimitedDriverVolunteer: public DriverVolunteer {
         void acceptOrder(const Order &order) override; // Assign distanceLeft to order's distance and decrease ordersLeft
         string toString() const override;
 
-//extras:
-        LimitedDriverVolunteer(const LimitedDriverVolunteer &other);
+    //extras:
          virtual ~LimitedDriverVolunteer();
     private:
         const int maxOrders; // The number of orders the volunteer can process in the whole simulation

@@ -31,9 +31,6 @@ using std:: vector;
 
         Volunteer:: ~Volunteer() {            
         }
-
-
-
   
     //constructor
     CollectorVolunteer::CollectorVolunteer(int id, const string &name, int coolDown)
@@ -66,12 +63,7 @@ using std:: vector;
     int CollectorVolunteer::getTimeLeft() const{
         return this->timeLeft;
     }
-
-     void CollectorVolunteer::setTimeLeft(int newTimeLeft){
-        this->timeLeft = newTimeLeft;
-     }
-
-
+    
     bool CollectorVolunteer::decreaseCoolDown(){
         this->timeLeft--;
         if(this->timeLeft==0){
@@ -79,7 +71,7 @@ using std:: vector;
         }
         return false;
     }
-
+     
     bool CollectorVolunteer::hasOrdersLeft() const{
         return true;
     }
@@ -92,7 +84,6 @@ using std:: vector;
         return false;
     }
 
-
     void CollectorVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
         this->timeLeft = coolDown;
@@ -100,17 +91,22 @@ using std:: vector;
     
     string CollectorVolunteer::toString() const{
         return "CollectorVolunteer";
-    }
+    }     
+     
+   
+
+
     CollectorVolunteer:: ~CollectorVolunteer(){
-
     }
 
-
+    void CollectorVolunteer::setTimeLeft(int newTimeLeft){
+        this->timeLeft = newTimeLeft;
+    }
 
 
 
 //constructor    
-LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
+    LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name, int coolDown ,int maxOrders)
     : CollectorVolunteer(id, name, coolDown), maxOrders(maxOrders), ordersLeft(maxOrders){}
 
         LimitedCollectorVolunteer* LimitedCollectorVolunteer::clone() const{
@@ -143,7 +139,12 @@ LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name,
         int LimitedCollectorVolunteer::getNumOrdersLeft() const{
             return this->ordersLeft;
         }
-         LimitedCollectorVolunteer:: ~LimitedCollectorVolunteer(){
+
+        string LimitedCollectorVolunteer::toString() const{
+            return "LimitedCollectorVolunteer";
+        }
+
+        LimitedCollectorVolunteer:: ~LimitedCollectorVolunteer(){
         
     }
 
@@ -152,9 +153,12 @@ LimitedCollectorVolunteer::LimitedCollectorVolunteer(int id, const string &name,
 
 
 //constructor
-DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
+    DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
     : Volunteer(id,name), maxDistance(maxDistance), distancePerStep(distancePerStep), distanceLeft(NO_ORDER){}
     
+      DriverVolunteer* DriverVolunteer::clone() const{
+        return new DriverVolunteer(*this);
+    }
 
     int  DriverVolunteer::getDistanceLeft() const{
         return this->distanceLeft;
@@ -168,10 +172,7 @@ DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, in
         return this->distancePerStep;
     }
 
-    void DriverVolunteer::setDistanceLeft(int newDistanceLeft){
-        this->distanceLeft = newDistanceLeft;
-    }
-
+    
 
     bool  DriverVolunteer::decreaseDistanceLeft(){
         this->distanceLeft =  this->distanceLeft - this->distancePerStep;
@@ -213,16 +214,13 @@ DriverVolunteer::DriverVolunteer(int id, const string &name, int maxDistance, in
     DriverVolunteer:: ~DriverVolunteer(){
 
     }
-    
-
-
-
-
-
+    void DriverVolunteer::setDistanceLeft(int newDistanceLeft){
+        this->distanceLeft = newDistanceLeft;
+    }
 
 
 //constructor    
-LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
+    LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int maxDistance, int distancePerStep,int maxOrders)
     : DriverVolunteer(id,name,maxDistance,distancePerStep) , maxOrders(maxOrders), ordersLeft(maxOrders){}
 
     LimitedDriverVolunteer* LimitedDriverVolunteer::clone() const {
@@ -250,15 +248,16 @@ LimitedDriverVolunteer::LimitedDriverVolunteer(int id, const string &name, int m
         return false;
     }
     
-        void LimitedDriverVolunteer::acceptOrder(const Order &order) {
-            this->activeOrderId= order.getId();
-            setDistanceLeft(order.getDistance());
-            this->ordersLeft--;
-        } 
-        string LimitedDriverVolunteer::toString() const {
-            return "LimitedDriverVolunteer";
-        }
-         LimitedDriverVolunteer:: ~LimitedDriverVolunteer(){
+    void LimitedDriverVolunteer::acceptOrder(const Order &order) {
+        this->activeOrderId= order.getId();
+        setDistanceLeft(order.getDistance());
+        this->ordersLeft--;
+    } 
+    string LimitedDriverVolunteer::toString() const {
+        return "LimitedDriverVolunteer";
+    }
+    
+    LimitedDriverVolunteer:: ~LimitedDriverVolunteer(){
         
     }
 

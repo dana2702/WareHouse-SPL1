@@ -108,23 +108,34 @@ void WareHouse::start(){
         else if (action =="restore"){  
         }
     
-
-
-
-
-
-    
 }
 };
-int WareHouse::getOrderCounter(){
+int WareHouse::getOrderCounter() const{
     return orderCounter;
 };
 
-int WareHouse::getVolunteerCounter(){
+int WareHouse::getVolunteerCounter() const{
     return volunteerCounter;
 };
 
-vector<Order*> WareHouse::getinProcessOrdersVector(){
+vector<Order*> WareHouse::getinProcessOrdersVector() const{
     return inProcessOrders;
-}
+};
+
+vector<Order*> WareHouse::getCompletedOrdersVector() const{
+    return completedOrders;
+};
+
+vector<Order*> WareHouse::getPendingOrderVector() const{
+    return pendingOrders;
+};
+
+vector<BaseAction*> WareHouse::getActionsLog() const{
+    return actionsLog;
+};
+
+vector<Volunteer*> WareHouse::getvolunteersVector() const{
+    return volunteers;
+};
+
 

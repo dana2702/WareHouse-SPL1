@@ -27,14 +27,15 @@ class WareHouse {
         void parseText(const string &configFilePath);
 
         //extras
-        vector<Customer*> getCustomerVector();
-        vector<Volunteer*> getvolunteersVector();
-        vector<BaseAction*> getActionsLog();
-        vector<Order*> getPendingOrderVector();
-        vector<Order*> getinProcessOrdersVector();
-        int getOrderCounter();
-        int getVolunteerCounter();
-        int getCustomerCounter();
+        vector<Customer*> getCustomerVector() const;
+        vector<Volunteer*> getvolunteersVector() const;
+        vector<BaseAction*> getActionsLog() const;
+        vector<Order*> getPendingOrderVector() const;
+        vector<Order*> getinProcessOrdersVector() const;
+        vector<Order*> getCompletedOrdersVector() const;
+        int getOrderCounter() const;
+        int getVolunteerCounter() const;
+        int getCustomerCounter() const;
         int extractNumber(const std::string& str); //extract the number from the input command
 
     private:
