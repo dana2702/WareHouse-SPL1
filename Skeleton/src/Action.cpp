@@ -104,10 +104,20 @@ AddCustomer::AddCustomer(const string &customerName, const string &customerType,
 
     string AddCustomer::toString() const{
         if(customerType==CustomerType::Civilian){
-            return ("customer "+ customerName+  " civilian "+ std::to_string(distance) + std::to_string(maxOrders));
+            if(getStatus() == ActionStatus::COMPLETED){
+                return ("customer "+ customerName+  " civilian "+ std::to_string(distance) + " "+std::to_string(maxOrders)+ " COMPLETED") ;
+            }
+            else{
+                return ("customer "+ customerName+  " civilian "+ std::to_string(distance) + " "+std::to_string(maxOrders)+ " ERROR");
+            }
         }
         else{
-            return ("customer "+ customerName+  " solider "+ std::to_string(distance) + std::to_string(maxOrders));
+            if(getStatus() == ActionStatus::COMPLETED){
+                return ("customer "+ customerName+  " soldier "+ std::to_string(distance) + " "+std::to_string(maxOrders)+ " COMPLETED") ;
+            }
+            else{
+                return ("customer "+ customerName+  " soldier "+ std::to_string(distance) + " "+std::to_string(maxOrders)+ " ERROR");
+            }        
         }
     }
 
@@ -194,10 +204,15 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 
     PrintOrderStatus* PrintOrderStatus::clone() const{
             return new PrintOrderStatus(*this);
-    }
+    };
 
     string PrintOrderStatus::toString() const{
-        return "PrintOrderStatus";
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("PrintOrderStatus "+ to_string(orderId) + " COMPLETED") ;
+        }
+        else{
+                return ("PrintOrderStatus "+ to_string(orderId) + " ERROR") ;
+        }
     }
 
 
@@ -250,7 +265,12 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){
 
 
     string PrintCustomerStatus::toString() const{
-         return "PrintCustomerStatus";
+         if(getStatus() == ActionStatus::COMPLETED){
+                return ("PrintCustomerStatus "+ to_string(customerId) + " COMPLETED") ;
+        }
+        else{
+                return ("PrintCustomerStatus "+ to_string(customerId) + " ERROR") ;
+        }
     }
 
 
@@ -318,8 +338,13 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
 
 
     string PrintVolunteerStatus::toString() const{
-         return "PrintVolunteerStatus";
-     }
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("PrintVolunteerStatus "+ to_string(volunteerId) + " COMPLETED") ;
+        }
+        else{
+                return ("PrintVolunteerStatus "+ to_string(volunteerId) + " ERROR") ;
+        }     
+    }
 
 
 
@@ -329,6 +354,7 @@ PrintActionsLog::PrintActionsLog(){}
         for (BaseAction* act : wareHouse.getActionsLog()) {
             std::cout << act->toString() << std::endl;
         }
+        complete();
     }
 
 
@@ -338,7 +364,12 @@ PrintActionsLog::PrintActionsLog(){}
 
 
     string PrintActionsLog::toString() const{
-        return "PrintActionsLog";
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("PrintActionsLog COMPLETED") ;
+        }
+        else{
+                return ("PrintActionsLog  ERROR") ;
+        }    
     }
 
 
@@ -355,7 +386,12 @@ Close::Close(){}
     }
 
     string Close::toString() const{
-        return "Close";
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("Close COMPLETED") ;
+        }
+        else{
+                return ("Close  ERROR") ;
+        } 
     }
 
 
@@ -373,7 +409,12 @@ BackupWareHouse::BackupWareHouse(){}
 
 
     string BackupWareHouse::toString() const{
-        return "BackupWareHouse";
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("BackupWareHouse COMPLETED") ;
+        }
+        else{
+                return ("BackupWareHouse  ERROR") ;
+        }     
     }
 
 
@@ -390,5 +431,10 @@ RestoreWareHouse::RestoreWareHouse(){}
     
 
     string RestoreWareHouse::toString() const{
-        return "RestoreWareHouse";
-}
+        if(getStatus() == ActionStatus::COMPLETED){
+                return ("RestoreWareHouse COMPLETED") ;
+        }
+        else{
+                return ("RestoreWareHouse  ERROR") ;
+        } 
+    }

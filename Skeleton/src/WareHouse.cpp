@@ -122,7 +122,50 @@ void WareHouse::start(){
 
         void WareHouse::addAction(BaseAction* action){
             actionsLog.push_back(action);
+        };
+
+
+    Customer& WareHouse::getCustomer(int customerId) const {
+        // Iterate through the vector to search for the customer
+        for (Customer* cus : customers) {
+            // Check if the customerId of the current customer matches the given customerId
+            if (cus->getId() == customerId) {
+                // Return a reference to the found customer
+                return *cus;
+            }
         }
+    };
+
+        Volunteer& WareHouse::getVolunteer(int volunteerId) const {
+        // Iterate through the vector to search for the customer
+        for (Volunteer* voli : volunteers) {
+            // Check if the customerId of the current customer matches the given customerId
+            if (voli->getId() == volunteerId) {
+                // Return a reference to the found customer
+                return *voli;
+            }
+        }
+    };
+
+        Order& WareHouse::getOrder(int orderId) const {
+        // Iterate through the vector to search for the customer
+       for(Order* ord : pendingOrders){
+                if(ord->getId() == orderId){
+                    return ord;
+                }
+        }
+         for(Order* ord : inProcessOrders){
+                    if(ord->getId() == orderId){
+                        return ord;
+                    }
+         }
+        for(Order* ord : completedOrders){
+                    if(ord->getId() == orderId){
+                        return ord;
+                    }
+        }
+    };
+
 
 
 
@@ -132,6 +175,10 @@ int WareHouse::getOrderCounter() const{
 
 int WareHouse::getVolunteerCounter() const{
     return volunteerCounter;
+};
+
+int WareHouse::getCustomerCounter() const{
+    return customerCounter;
 };
 
 vector<Order*> WareHouse::getinProcessOrdersVector() const{
@@ -153,5 +200,6 @@ vector<BaseAction*> WareHouse::getActionsLog() const{
 vector<Volunteer*> WareHouse::getvolunteersVector() const{
     return volunteers;
 };
+
 
 
