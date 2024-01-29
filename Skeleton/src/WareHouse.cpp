@@ -43,8 +43,7 @@ void WareHouse::start(){
             if(order->getStatus() == ActionStatus::COMPLETED){
                 orderCounter++;
             }
-            actionsLog.push_back(order);
-
+            addAction(order);
         }      
     }  
 
@@ -65,7 +64,7 @@ void WareHouse::start(){
             if(cust->getStatus() == ActionStatus::COMPLETED){
                 customerCounter++;
             }
-           actionsLog.push_back(cust);
+           addAction(cust);
         }
         
     }
@@ -76,30 +75,36 @@ void WareHouse::start(){
         if (iss >> number) {
             PrintOrderStatus* print = new PrintOrderStatus(number);
             print->act(*this);
-           actionsLog.push_back(print);
+           addAction(print);
         }    
     
 
     else if (action =="customerStatus"){  
+        int number;
+        if (iss >> number) {
+            PrintCustomerStatus* print = new PrintCustomerStatus(number);
+            print->act(*this);
+            addAction(print);
+        }    
     }
         
     else if (action =="volunteerStatus"){  
+        int number;
+        if (iss >> number) {
+            PrintVolunteerStatus* print = new PrintVolunteerStatus(number);
+            print->act(*this);
+            addAction(print);
+        }  
     }
 
     else if (action =="log"){  
+        PrintActionsLog* log = new PrintActionsLog();
+        log->act(*this);
+        addAction(log);
+    }
 
-            // for (int i = 0; i < actionsLog.size(); i++)
-            // {
-            //     actionsLog->at(i)->toString();
-            // }
-
-            // for (BaseAction* act : actionsLog) {
-            //      act->toString();
-            // }
-
-        }
-
-        else if (action =="close"){  
+        else if (action =="close"){ 
+            close(); 
         }
 
         else if (action =="backup"){  
@@ -110,6 +115,17 @@ void WareHouse::start(){
     
 }
 };
+
+        void WareHouse::addOrder(Order* order){
+            pendingOrders.push_back(order);
+        }
+
+        void WareHouse::addAction(BaseAction* action){
+            actionsLog.push_back(action);
+        }
+
+
+
 int WareHouse::getOrderCounter() const{
     return orderCounter;
 };

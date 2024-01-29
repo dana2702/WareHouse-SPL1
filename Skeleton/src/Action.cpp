@@ -1,4 +1,6 @@
+#pragma once
 #include "Action.h"
+#include "Volunteer.h"
 #include <iostream>
 using namespace std;
 
@@ -47,7 +49,7 @@ void AddOrder::act(WareHouse &wareHouse){
                 // the code for 'order' action here
                 Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
                 cus->addOrder(newOrder->getId());
-                wareHouse.getPendingOrderVector().push_back(newOrder);
+                wareHouse.addOrder(newOrder);
                 complete();
             }
         }
@@ -264,26 +266,46 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
         }
         // the id is ok
         else{
-            for(Volunteer* vol : wareHouse.getvolunteersVector()){
-                if(vol->getId()){
-                    // if the customer reaches his maxOrders limit: ”Cannot place this order”.
-                    if (cus->getOrdersIds().size() < cus->getMaxOrders())
-                    {
-                        error("Cannot place this order");
+            bool flag = false;
+            for(Volunteer* voli : wareHouse.getvolunteersVector()){
+                if(voli->getId() == volunteerId){
+                    std::cout << "VolunteerID: "<< voli->getId()<<  std::endl;
+                    if(voli->isBusy()){
+                        std::cout << "isBusy: True"<< std::endl;
+                        std::cout << "OrderID: "<< voli->getActiveOrderId()<<  std::endl;
                     }
-                }    // the input is ok
-                else{
-                    std::cout << "Performing order action with number: " << customerId << std::endl;
-                    // the code for 'order' action here
-                    Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
-                    cus->addOrder(newOrder->getId());
-                    wareHouse.getPendingOrderVector().push_back(newOrder);
+                    else{
+                        std::cout << "isBusy: False"<< std::endl;
+                        std::cout << "OrderID: None"<<  std::endl;
+                    }
+                    if(DriverVolunteer* driverVoli = dynamic_cast<DriverVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< driverVoli->getDistanceLeft()<< std::endl;
+                        std::cout << "OrdersLeft: no limit"<<  std::endl;
+                    }
+                    if(LimitedDriverVolunteer* LidriverVoli = dynamic_cast<LimitedDriverVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< LidriverVoli->getDistanceLeft()<< std::endl;
+                        std::cout << "OrdersLeft:"<< LidriverVoli->getNumOrdersLeft()<< std::endl;
+                    }
+                    if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< coliVoli->getTimeLeft()<< std::endl;
+                        std::cout << "OrdersLeft: no limit"<<  std::endl;
+                    }
+                    if(LimitedCollectorVolunteer* LicoliVoli = dynamic_cast<LimitedCollectorVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< LicoliVoli->getTimeLeft()<< std::endl;
+                        std::cout << "OrdersLeft:"<< LicoliVoli->getNumOrdersLeft()<< std::endl;
+                    }
+                    flag =true;
                     complete();
-                }
+                }    
+                
+                
+            }
+            
+            if(!flag){
+                error("Volunteer doesn’t exist");
+                std::cout << getErrorMsg() << std::endl;
             }
         }
-
-
     }
 
 
@@ -304,6 +326,9 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
 PrintActionsLog::PrintActionsLog(){}
 
     void PrintActionsLog:: act(WareHouse &wareHouse){
+        for (BaseAction* act : wareHouse.getActionsLog()) {
+            std::cout << act->toString() << std::endl;
+        }
     }
 
 
