@@ -2,8 +2,6 @@
 #include "Customer.h"
 #include <iostream>
 #include <vector>
-
-
 using namespace std;
 
 
@@ -11,13 +9,12 @@ using namespace std;
 Customer::Customer(int id, const string &name, int locationDistance, int maxOrders)
      : id(id), name(name), locationDistance(locationDistance), maxOrders(maxOrders), ordersId() {}
 
-
-    int Customer::getId() const{
-        return this->id;
-    }
-
     const string& Customer::getName() const{
         return this->name;
+    }
+    
+    int Customer::getId() const{
+        return this->id;
     }
 
     int Customer::getCustomerDistance() const{

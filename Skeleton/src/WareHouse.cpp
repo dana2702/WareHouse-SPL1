@@ -14,7 +14,11 @@ using std:: string;
 
 
 WareHouse::WareHouse(const string &configFilePath)
-: isOpen(false), actionsLog(actionsLog),volunteers(volunteers),pendingOrders(pendingOrders),inProcessOrders(inProcessOrders),completedOrders(completedOrders),customers(customers) ,customerCounter(0),volunteerCounter(0),orderCounter(0){}
+: isOpen(false),actionsLog(),volunteers(),pendingOrders(),inProcessOrders(),completedOrders(),customers() ,customerCounter(0),volunteerCounter(0),orderCounter(0){
+    cout << "configurationFile"<< endl;
+    parseText(configFilePath);
+    customerCounter = customers.size();
+};
 
     
 void WareHouse::start(){
@@ -52,8 +56,6 @@ void WareHouse::start(){
                     orderCounter++;
                 }
                 addAction(order);
-                        std::cout << "doneee" << std::endl;
-
             }      
         }  
 
@@ -90,6 +92,8 @@ void WareHouse::start(){
         
 
         else if (action =="customerStatus"){  
+                    cout << "customerStatus"<< endl;
+
             int number;
             if (iss >> number) {
                 PrintCustomerStatus* print = new PrintCustomerStatus(number);
@@ -179,6 +183,8 @@ void WareHouse::start(){
 
 
     void WareHouse::parseText(const string &configFilePath){
+                cout << "parseText"<< endl;
+
         ifstream configFile(configFilePath);
     if (!configFile.is_open()) {
         std::cerr << "Error opening the configuration file." << std::endl;
@@ -260,8 +266,19 @@ void WareHouse::start(){
 }
     
 
+const vector<BaseAction*>& WareHouse::getActions() const{
+    return actionsLog;
+}
 
 
+void WareHouse::close(){
+    //.....
+}
+
+void WareHouse::open(){
+    isOpen=true;
+    //.....
+}
 
 int WareHouse::getOrderCounter() const{
     return orderCounter;
@@ -273,6 +290,10 @@ int WareHouse::getVolunteerCounter() const{
 
 int WareHouse::getCustomerCounter() const{
     return customerCounter;
+};
+
+vector<Customer*> WareHouse::getCustomerVector() const{
+    return customers;
 };
 
 vector<Order*> WareHouse::getinProcessOrdersVector() const{

@@ -17,7 +17,7 @@ BaseAction::BaseAction(){}
     void BaseAction::error(string errorMsg){
         this->status=ActionStatus::ERROR;
         this->errorMsg = errorMsg;
-        std::cout << errorMsg << std::endl;
+        //std::cout << errorMsg << std::endl;
     }
 
     string BaseAction::getErrorMsg() const{
@@ -51,7 +51,7 @@ AddOrder::AddOrder(int id): customerId(id){}
 void AddOrder::act(WareHouse &wareHouse){
     // if the provided customer ID doesn’t exist: ”Cannot place this order”.
     if (customerId > wareHouse.getCustomerCounter()){
-        error("Cannot place this order");
+        error("Cannot place this order 1");
         std::cout << getErrorMsg() << std::endl;
     }
     // the id is ok
@@ -61,7 +61,7 @@ void AddOrder::act(WareHouse &wareHouse){
                 // if the customer reaches his maxOrders limit: ”Cannot place this order”.
                 if (cus->getOrdersIds().size() < cus->getMaxOrders())
                 {
-                    error("Cannot place this order");
+                    error("Cannot place this order 2");
                 }
             }    // the input is ok
             else{
@@ -247,6 +247,7 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){}
 
     void PrintCustomerStatus::act(WareHouse &wareHouse) {
+        cout << "PrintCustomerStatus"<< endl;
          // if the provided customer ID doesn’t exist: ”Cannot place this order”.
         if (customerId > wareHouse.getCustomerCounter()){
             error("Customer doesn't exist");
