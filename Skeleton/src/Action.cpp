@@ -25,6 +25,26 @@ BaseAction::BaseAction(){}
     }
 
 
+
+
+ 
+        SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
+        void SimulateStep::act(WareHouse &wareHouse) {
+                    std::cout << "yayyyy "<< std::endl;
+
+        }
+        std::string SimulateStep::toString() const {
+            return ("Step " +numOfSteps); 
+        }
+        SimulateStep* SimulateStep::clone() const {
+            return new SimulateStep(*this);
+        }
+
+    
+
+
+
+
 //constructor
 AddOrder::AddOrder(int id): customerId(id){}
 
@@ -45,11 +65,17 @@ void AddOrder::act(WareHouse &wareHouse){
                 }
             }    // the input is ok
             else{
-                std::cout << "Performing order action with number: " << customerId << std::endl;
+                //std::cout << "Performing order action with number: " << customerId << std::endl;
                 // the code for 'order' action here
                 Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
+                        std::cout <<"line 71" << std::endl;
+
                 cus->addOrder(newOrder->getId());
+                                        std::cout <<"line 74" << std::endl;
+
                 wareHouse.addOrder(newOrder);
+                                        std::cout <<"line 77" << std::endl;
+
                 complete();
             }
         }

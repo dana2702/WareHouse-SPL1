@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-
+#include <fstream>
 #include "Order.h"
 #include "Customer.h"
 
@@ -36,7 +36,7 @@ class WareHouse {
         int getOrderCounter() const;
         int getVolunteerCounter() const;
         int getCustomerCounter() const;
-        int extractNumber(const std::string& str); //extract the number from the input command
+        //int extractNumber(const std::string& str); //extract the number from the input command
 
     private:
         bool isOpen;
