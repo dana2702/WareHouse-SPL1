@@ -38,9 +38,11 @@ void WareHouse::start(){
             int number;
             if (iss >> number) {
                 std::cout << "Performing step action with number: " << number << std::endl;
-                // the code for 'step' action here
                 SimulateStep* step = new SimulateStep(number);
+                step->act(*this);
+                std::cout <<"done act" << number << std::endl;
                 addAction(step);
+                std::cout << "added step to log" << number << std::endl;
             } 
         } 
         else if (action == "order") {
@@ -49,13 +51,18 @@ void WareHouse::start(){
             int number;
             if (iss >> number) {
                 AddOrder* order = new AddOrder(number);
+                std::cout << "ani kan" << std::endl;
+                order->act(*this);
+                std::cout << "asiti order act" << std::endl;
                 if(order->getStatus() == ActionStatus::COMPLETED){
+                    std::cout << "ken completed" << std::endl;
                     orderCounter++;
                 }
                 addAction(order);
             }      
         }  
-        else if (action =="customer"){  
+        else if (action =="customer"){ 
+            std::cout << "problem?" << std::endl; 
             // Extract the number for step action
             std::string *name; //check if kohavit is ok
         // iss >> *name;
@@ -67,6 +74,7 @@ void WareHouse::start(){
             //iss >> maxOrd;
             if(iss >> *name >> *type >> distance >> maxOrd){
                 AddCustomer* cust = new AddCustomer(*name,*type, distance, maxOrd);
+                std::cout << "created cust" << std::endl;
                 if(cust->getStatus() == ActionStatus::COMPLETED){
                     customerCounter++;
                 }

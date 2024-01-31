@@ -34,7 +34,9 @@ SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
 void SimulateStep::act(WareHouse &wareHouse) {
     std::cout << "yayyyy "<< std::endl;
     for (int i = 0; i < numOfSteps; i++){
+        std::cout << "entered for" << std::endl;
         for(Order* ori : wareHouse.getPendingOrderVector()){
+            std::cout << "entered 2 for" << std::endl;
             // v1
             // if(ori->getStatus()==OrderStatus::PENDING){
             //     for(Volunteer* voli : wareHouse.getvolunteersVector()){
