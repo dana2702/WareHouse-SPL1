@@ -31,7 +31,7 @@ void WareHouse::start(){
         std::istringstream iss(input);
         std::string action;
         iss >> action;
-        
+        std::cout << "passed parse"<< std::endl;
         // Perform actions based on the first word
         if (action == "step") {
             // Extract the number for step action
@@ -43,10 +43,9 @@ void WareHouse::start(){
                 addAction(step);
             } 
         } 
-
-
         else if (action == "order") {
             // Extract the number for order action
+            std::cout << "in order 50>" << std::endl;
             int number;
             if (iss >> number) {
                 AddOrder* order = new AddOrder(number);
@@ -56,11 +55,9 @@ void WareHouse::start(){
                 addAction(order);
             }      
         }  
-
-
         else if (action =="customer"){  
             // Extract the number for step action
-            std::string *name;
+            std::string *name; //check if kohavit is ok
         // iss >> *name;
             std::string *type;
             //iss >> *type;
@@ -77,7 +74,6 @@ void WareHouse::start(){
             }
             
         }
-
         else if (action =="orderStatus"){  
             // Extract the number for orderStatus action
             int number;
@@ -87,7 +83,7 @@ void WareHouse::start(){
             addAction(print);
             }    
         
-
+        }
         else if (action =="customerStatus"){  
                     cout << "customerStatus"<< endl;
 
@@ -97,7 +93,6 @@ void WareHouse::start(){
                 addAction(print);
             }    
         }
-            
         else if (action =="volunteerStatus"){  
             int number;
             if (iss >> number) {
@@ -105,13 +100,12 @@ void WareHouse::start(){
                 addAction(print);
             }  
         }
-
         else if (action =="log"){  
             PrintActionsLog* log = new PrintActionsLog();
             addAction(log);
         }
-
         else if (action =="close"){ 
+            std::cout << "in close 116>" << std::endl;
             close(); 
         }
 
@@ -121,12 +115,11 @@ void WareHouse::start(){
         else if (action =="restore"){  
         }
         else{
-            cout << "try again"<< endl;
+            std::cout << "try again!" << std::endl;
         }
 
     }
 
-}
 };
 
         void WareHouse::addOrder(Order* order){
@@ -273,6 +266,7 @@ const vector<BaseAction*>& WareHouse::getActions() const{
 
 
 void WareHouse::close(){
+    std::cout << "in close 278>" << std::endl;
     isOpen=false;
     //.....
 }

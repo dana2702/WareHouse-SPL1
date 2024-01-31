@@ -99,7 +99,7 @@ void SimulateStep::act(WareHouse &wareHouse) {
             }
         }
 
-        for (Volunteer* voli : wareHouse.getvolunteersVector(){})
+        for (Volunteer* voli : wareHouse.getvolunteersVector())
         {
             if(voli->getCompletedOrderId() != NO_ORDER){
                 // we need to confirm that the limited is included in our if
@@ -112,7 +112,7 @@ void SimulateStep::act(WareHouse &wareHouse) {
             }
 
             if(!voli->hasOrdersLeft()){
-
+                wareHouse.deleteVolunteer(voli);
             }
         }
         
