@@ -36,6 +36,10 @@ class WareHouse {
         int getOrderCounter() const;
         int getVolunteerCounter() const;
         int getCustomerCounter() const;
+        void fromPendingToinProcess(int orderID);
+        void frominProcessToPending(int orderID);
+        void frominProcessToCompleted(int orderID);
+        void deleteVolunteer(Volunteer* volunteer);
         //int extractNumber(const std::string& str); //extract the number from the input command
 
     private:

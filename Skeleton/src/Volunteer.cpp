@@ -41,19 +41,10 @@ using std:: vector;
     }
 
     void CollectorVolunteer::step(){
-
-
-        // ........
         if(decreaseCoolDown()){
             // send the order to driver (pending)
-            completedOrderId++;
+            this->completedOrderId=this->activeOrderId;
         }
-        else {
-            // work on the order
-        }
-
-
-        
     }
 
     int CollectorVolunteer::getCoolDown() const{
@@ -77,7 +68,7 @@ using std:: vector;
     }
 
     bool CollectorVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy() && hasOrdersLeft()){
+        if(!isBusy() && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
             return true;
         }
 
@@ -87,6 +78,7 @@ using std:: vector;
     void CollectorVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
         this->timeLeft = coolDown;
+        this->completedOrderId = NO_ORDER;
     }
     
     string CollectorVolunteer::toString() const{
@@ -118,7 +110,7 @@ using std:: vector;
         }
 
         bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const{
-            if(!isBusy() && hasOrdersLeft()){
+            if(!isBusy() && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
                 return true;
             }
 
@@ -128,6 +120,7 @@ using std:: vector;
         void LimitedCollectorVolunteer::acceptOrder(const Order &order){
             this->ordersLeft--;
             this->activeOrderId = order.getId();
+            this->completedOrderId = NO_ORDER;
             setTimeLeft(getCoolDown());
         }
 
@@ -184,7 +177,7 @@ using std:: vector;
     }
 
     bool  DriverVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->maxDistance){
+        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->maxDistance && order.getStatus() == OrderStatus::COLLECTING){
             return true;
         }
 
@@ -194,17 +187,12 @@ using std:: vector;
     void  DriverVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
         this->distanceLeft= order.getDistance();
+        this->completedOrderId = NO_ORDER;
     }
 
     void  DriverVolunteer::step(){
         if(decreaseDistanceLeft()){
-            if(this->completedOrderId==-1){
-                this->completedOrderId=0;
-            }
-            this->completedOrderId++;
-        }
-        else{
-            //....
+            this->completedOrderId= this->activeOrderId;
         }
     }
 
@@ -241,7 +229,7 @@ using std:: vector;
     }
     
     bool LimitedDriverVolunteer::canTakeOrder(const Order &order) const {
-        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->getMaxDistance()){
+        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->getMaxDistance() && order.getStatus() == OrderStatus::COLLECTING){
             return true;
         }
 
@@ -249,9 +237,10 @@ using std:: vector;
     }
     
     void LimitedDriverVolunteer::acceptOrder(const Order &order) {
-        this->activeOrderId= order.getId();
-        setDistanceLeft(order.getDistance());
         this->ordersLeft--;
+        this->activeOrderId= order.getId();
+        this->completedOrderId = NO_ORDER;
+        setDistanceLeft(order.getDistance());
     } 
     string LimitedDriverVolunteer::toString() const {
         return "LimitedDriverVolunteer";

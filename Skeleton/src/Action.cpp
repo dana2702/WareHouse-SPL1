@@ -28,11 +28,96 @@ BaseAction::BaseAction(){}
 
 
  
-        SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
-        void SimulateStep::act(WareHouse &wareHouse) {
-                    std::cout << "yayyyy "<< std::endl;
+SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
 
+
+void SimulateStep::act(WareHouse &wareHouse) {
+    std::cout << "yayyyy "<< std::endl;
+    for (int i = 0; i < numOfSteps; i++){
+        for(Order* ori : wareHouse.getPendingOrderVector()){
+            // v1
+            // if(ori->getStatus()==OrderStatus::PENDING){
+            //     for(Volunteer* voli : wareHouse.getvolunteersVector()){
+            //         if(!voli->isBusy()){
+            //             if(LimitedCollectorVolunteer* LicoliVoli = dynamic_cast<LimitedCollectorVolunteer*>(voli)){
+            //                 if(LicoliVoli->canTakeOrder(*ori)){
+            //                     LicoliVoli->acceptOrder(*ori);
+            //                     ori->setStatus(OrderStatus::COLLECTING);
+            //                     LicoliVoli->step();
+            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+
+            //                 }
+            //             }
+            //             else if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
+            //                 if(coliVoli->canTakeOrder(*ori)){
+            //                     coliVoli->acceptOrder(*ori);
+            //                     ori->setStatus(OrderStatus::COLLECTING);
+            //                     coliVoli->step();
+            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+                    
+            // else if(ori->getStatus()==OrderStatus::COLLECTING){
+            //     for(Volunteer* voli : wareHouse.getvolunteersVector()){
+            //         if(!voli->isBusy()){
+            //             if(LimitedDriverVolunteer* LideliVoli = dynamic_cast<LimitedDriverVolunteer*>(voli)){
+            //                 if(LideliVoli->canTakeOrder(*ori)){
+            //                     LideliVoli->acceptOrder(*ori);
+            //                     ori->setStatus(OrderStatus::DELIVERING);
+            //                     LideliVoli->step(); 
+            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+            //                 }
+            //             }
+            //             else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
+            //                 if(deliVoli->canTakeOrder(*ori)){
+            //                     deliVoli->acceptOrder(*ori);
+            //                     ori->setStatus(OrderStatus::DELIVERING);
+            //                     deliVoli->step(); 
+            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }   
+
+            //v2
+            for(Volunteer* voli : wareHouse.getvolunteersVector()){
+                if(voli->canTakeOrder(*ori)){
+                    voli->acceptOrder(*ori);
+                    if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
+                        ori->setStatus(OrderStatus::COLLECTING);
+                    }
+                    else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
+                        ori->setStatus(OrderStatus::DELIVERING);
+                    }
+                    voli->step();
+                    wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+                }
+            }
         }
+
+        for (Volunteer* voli : wareHouse.getvolunteersVector(){})
+        {
+            if(voli->getCompletedOrderId() != NO_ORDER){
+                // we need to confirm that the limited is included in our if
+                if (CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
+                    wareHouse.frominProcessToPending(coliVoli->getActiveOrderId());
+                }
+                else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
+                    wareHouse.frominProcessToCompleted(deliVoli->getActiveOrderId());
+                }
+            }
+
+            if(!voli->hasOrdersLeft()){
+
+            }
+        }
+        
+    }    
+}
         std::string SimulateStep::toString() const {
             return ("Step " +numOfSteps); 
         }

@@ -1,4 +1,4 @@
-#include "WareHouse.h"
+#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/WareHouse.h"
 #include <iostream>
 #include <fstream>
 
@@ -15,10 +15,7 @@ int main(int argc, char** argv){
         return 0;
     }
     string configurationFile = argv[1];
-    cout << configurationFile<< endl;
-    cout << "Line 19"<< endl;
     WareHouse wareHouse(configurationFile);
-    cout << "Line 21"<< endl;
     wareHouse.start();
     // if(backup!=nullptr){
     // 	delete backup;
