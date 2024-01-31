@@ -2,7 +2,9 @@
 #include "Action.h"
 #include "Volunteer.h"
 #include <iostream>
+#include <sstream>
 using namespace std;
+
 
 BaseAction::BaseAction(){}
 
@@ -491,6 +493,17 @@ PrintActionsLog::PrintActionsLog(){}
 Close::Close(){}
 
     void Close:: act(WareHouse &wareHouse){
+        std::stringstream outputString;
+        int numOfOreders = wareHouse.getOrderCounter();
+        for(int i = 0; i < numOfOreders; i++){
+            outputString << "OrderID: " << i;
+            outputString << ", CustomerID: " << wareHouse.getOrder(i).getCustomerId();
+            outputString << ", Status: " << PrintOrderStatus(wareHouse.getOrder(i).getId()).toString() << endl;
+            
+        }
+        cout << outputString.str() << endl;
+        complete();
+        wareHouse.addAction(this);
         wareHouse.close();
     }
 
@@ -514,6 +527,12 @@ Close::Close(){}
 BackupWareHouse::BackupWareHouse(){}
 
     void BackupWareHouse:: act(WareHouse &wareHouse){
+        if(backup != nullptr){
+            delete backup;
+        }
+        backup = new WareHouse(wareHouse); 
+        complete();
+        wareHouse.addAction(this);
     }
 
 

@@ -61,18 +61,19 @@ void WareHouse::start(){
                 addAction(order);
             }      
         }  
-        else if (action =="customer"){ 
-            std::cout << "problem?" << std::endl; 
+        else if (action =="customer"){  
             // Extract the number for step action
             std::string *name; //check if kohavit is ok
         // iss >> *name;
             std::string *type;
             //iss >> *type;
             int distance;
-            //iss >> distance;
+            iss >> distance;
             int maxOrd;
-            //iss >> maxOrd;
+            iss >> maxOrd;
+            std::cout << "hereeeee" << distance << maxOrd << std::endl;
             if(iss >> *name >> *type >> distance >> maxOrd){
+                std::cout << "problem?" << std::endl;
                 AddCustomer* cust = new AddCustomer(*name,*type, distance, maxOrd);
                 std::cout << "created cust" << std::endl;
                 if(cust->getStatus() == ActionStatus::COMPLETED){
