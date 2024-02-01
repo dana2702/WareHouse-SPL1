@@ -15,7 +15,6 @@ using std:: string;
 WareHouse::WareHouse(const string &configFilePath)
 : isOpen(false),actionsLog(),volunteers(),pendingOrders(),inProcessOrders(),completedOrders(),customers() ,customerCounter(0),volunteerCounter(0),orderCounter(0){
     parseText(configFilePath);
-    customerCounter = customers.size();
 };
 
     
@@ -31,7 +30,6 @@ void WareHouse::start(){
         std::istringstream iss(input);
         std::string action;
         iss >> action;
-        std::cout << "passed parse"<< std::endl;
         // Perform actions based on the first word
         if (action == "step") {
             // Extract the number for step action
@@ -39,63 +37,35 @@ void WareHouse::start(){
             if (iss >> number) {
                 std::cout << "Performing step action with number: " << number << std::endl;
                 SimulateStep* step = new SimulateStep(number);
-                step->act(*this);
-                std::cout <<"done act" << number << std::endl;
                 addAction(step);
-                std::cout << "added step to log" << number << std::endl;
             } 
         } 
         else if (action == "order") {
             // Extract the number for order action
-            std::cout << "in order 50>" << std::endl;
             int number;
             if (iss >> number) {
                 AddOrder* order = new AddOrder(number);
-                std::cout << "ani kan" << std::endl;
-                order->act(*this);
-                std::cout << "asiti order act" << std::endl;
-                if(order->getStatus() == ActionStatus::COMPLETED){
-                    std::cout << "ken completed" << std::endl;
-                    orderCounter++;
-                }
                 addAction(order);
             }      
         }  
         else if (action =="customer"){  
-            // Extract the number for step action
-            std::string *name; //check if kohavit is ok
-        // iss >> *name;
-            std::string *type;
-            //iss >> *type;
+            std::string name; 
+            std::string type;
             int distance;
-            iss >> distance;
-            int maxOrd;
-            iss >> maxOrd;
-            std::cout << "hereeeee" << distance << maxOrd << std::endl;
-            if(iss >> *name >> *type >> distance >> maxOrd){
-                std::cout << "problem?" << std::endl;
-                AddCustomer* cust = new AddCustomer(*name,*type, distance, maxOrd);
-                std::cout << "created cust" << std::endl;
-                if(cust->getStatus() == ActionStatus::COMPLETED){
-                    customerCounter++;
-                }
-            addAction(cust);
-            }
-            
+            int maxOrd;  
+            if(iss >> name >> type >> distance >> maxOrd){
+                AddCustomer* cust = new AddCustomer(name,type, distance, maxOrd);
+                addAction(cust);
+            }            
         }
         else if (action =="orderStatus"){  
-            // Extract the number for orderStatus action
             int number;
             if (iss >> number) {
                 PrintOrderStatus* print = new PrintOrderStatus(number);
-                print->act(*this);
-            addAction(print);
+                addAction(print);
             }    
-        
         }
         else if (action =="customerStatus"){  
-                    cout << "customerStatus"<< endl;
-
             int number;
             if (iss >> number) {
                 PrintCustomerStatus* print = new PrintCustomerStatus(number);
@@ -114,8 +84,8 @@ void WareHouse::start(){
             addAction(log);
         }
         else if (action =="close"){ 
-            std::cout << "in close 116>" << std::endl;
-            close(); 
+            Close* close = new Close();
+            addAction(close);
         }
 
         else if (action =="backup"){  
@@ -131,17 +101,18 @@ void WareHouse::start(){
 
 };
 
-        void WareHouse::addOrder(Order* order){
-            pendingOrders.push_back(order);
-        }
+void WareHouse::addOrder(Order* order){
+    std::cout << "problem? add order 123" << std::endl;
+    pendingOrders.push_back(order);
+    orderCounter++;
+}
 
-        void WareHouse::addAction(BaseAction* action){
-            actionsLog.push_back(action);
+void WareHouse::addAction(BaseAction* action){
             action->act(*this);
-        };
+            actionsLog.push_back(action);
+};
 
-
-    Customer& WareHouse::getCustomer(int customerId) const {
+Customer& WareHouse::getCustomer(int customerId) const {
         // Iterate through the vector to search for the customer
         for (Customer* cus : customers) {
             // Check if the customerId of the current customer matches the given customerId
@@ -152,7 +123,7 @@ void WareHouse::start(){
         }
     };
 
-        Volunteer& WareHouse::getVolunteer(int volunteerId) const {
+Volunteer& WareHouse::getVolunteer(int volunteerId) const {
         // Iterate through the vector to search for the customer
         for (Volunteer* voli : volunteers) {
             // Check if the customerId of the current customer matches the given customerId
@@ -163,7 +134,7 @@ void WareHouse::start(){
         }
     };
 
-        Order& WareHouse::getOrder(int orderId) const {
+Order& WareHouse::getOrder(int orderId) const {
         // Iterate through the vector to search for the customer
        for(Order* ord : pendingOrders){
                 if(ord->getId() == orderId){
@@ -183,7 +154,7 @@ void WareHouse::start(){
     };
 
 
-    void WareHouse::parseText(const string &configFilePath){
+void WareHouse::parseText(const string &configFilePath){
         ifstream configFile(configFilePath);
     if (!configFile.is_open()) {
         std::cerr << "Error opening the configuration file." << std::endl;
@@ -221,7 +192,7 @@ void WareHouse::start(){
 
             // add customer to warehouse
             if (newCustomer) {
-                AddCustomer(name,customerType,distance,maxOrders);
+                AddCustomer (name,customerType,distance,maxOrders).act(*this);
             }
         } else if (type == "volunteer") {
             // Parse volunteer
@@ -275,7 +246,6 @@ const vector<BaseAction*>& WareHouse::getActions() const{
 
 
 void WareHouse::close(){
-    std::cout << "in close 278>" << std::endl;
     isOpen=false;
     //.....
 }
@@ -295,6 +265,10 @@ int WareHouse::getVolunteerCounter() const{
 
 int WareHouse::getCustomerCounter() const{
     return customerCounter;
+};
+
+void WareHouse::setCustomerCounter(int num){
+    customerCounter = num;
 };
 
 void WareHouse::fromPendingToinProcess(int orderID){
@@ -333,6 +307,9 @@ void WareHouse::deleteVolunteer(Volunteer* volunteer){
     }
 }
 
+void WareHouse::addCustomer(Customer* customer){
+    customers.push_back(customer);
+};
 
 vector<Customer*> WareHouse::getCustomerVector() const{
     return customers;
