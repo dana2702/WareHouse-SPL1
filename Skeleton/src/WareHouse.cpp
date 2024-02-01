@@ -274,8 +274,9 @@ void WareHouse::setCustomerCounter(int num){
 void WareHouse::fromPendingToinProcess(int orderID){
     for (auto it = pendingOrders.begin(); it != pendingOrders.end();++it){
         if((*it)->getId() == orderID ){
-           inProcessOrders.push_back(*it);
-           pendingOrders.erase(it);
+            inProcessOrders.push_back(*it);
+            pendingOrders.erase(it);
+            break;
         }
     }
 };
@@ -303,6 +304,7 @@ void WareHouse::deleteVolunteer(Volunteer* volunteer){
     for (auto it = volunteers.begin(); it != volunteers.end();++it){
         if((*it)->getId() == volunteer->getId()){
            volunteers.erase(it);
+           break;
         }
     }
 }

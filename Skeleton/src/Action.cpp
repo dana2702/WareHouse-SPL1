@@ -34,80 +34,39 @@ SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
 
 
 void SimulateStep::act(WareHouse &wareHouse) {
-    std::cout << "yayyyy "<< std::endl;
-    for (int i = 0; i < numOfSteps; i++){
-        std::cout << "entered for" << std::endl;
-        if(wareHouse.getPendingOrderVector().size()==0){
-            std::cout << "not entered 2 for" << std::endl;
-        }
-        else{      
+    for (int i = 0; i < numOfSteps; i++){     
         for(Order* ori : wareHouse.getPendingOrderVector()){
             std::cout << "entered 2 for" << std::endl;
-            // v1
-            // if(ori->getStatus()==OrderStatus::PENDING){
-            //     for(Volunteer* voli : wareHouse.getvolunteersVector()){
-            //         if(!voli->isBusy()){
-            //             if(LimitedCollectorVolunteer* LicoliVoli = dynamic_cast<LimitedCollectorVolunteer*>(voli)){
-            //                 if(LicoliVoli->canTakeOrder(*ori)){
-            //                     LicoliVoli->acceptOrder(*ori);
-            //                     ori->setStatus(OrderStatus::COLLECTING);
-            //                     LicoliVoli->step();
-            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
-
-            //                 }
-            //             }
-            //             else if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
-            //                 if(coliVoli->canTakeOrder(*ori)){
-            //                     coliVoli->acceptOrder(*ori);
-            //                     ori->setStatus(OrderStatus::COLLECTING);
-            //                     coliVoli->step();
-            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-                    
-            // else if(ori->getStatus()==OrderStatus::COLLECTING){
-            //     for(Volunteer* voli : wareHouse.getvolunteersVector()){
-            //         if(!voli->isBusy()){
-            //             if(LimitedDriverVolunteer* LideliVoli = dynamic_cast<LimitedDriverVolunteer*>(voli)){
-            //                 if(LideliVoli->canTakeOrder(*ori)){
-            //                     LideliVoli->acceptOrder(*ori);
-            //                     ori->setStatus(OrderStatus::DELIVERING);
-            //                     LideliVoli->step(); 
-            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
-            //                 }
-            //             }
-            //             else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
-            //                 if(deliVoli->canTakeOrder(*ori)){
-            //                     deliVoli->acceptOrder(*ori);
-            //                     ori->setStatus(OrderStatus::DELIVERING);
-            //                     deliVoli->step(); 
-            //                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }   
-
-            //v2
+            bool flag = false;
             for(Volunteer* voli : wareHouse.getvolunteersVector()){
-                if(voli->canTakeOrder(*ori)){
+            std::cout << "entered 3 for" << std::endl;
+                if(voli->canTakeOrder(*ori) && !flag){
+                    flag=true;
+                    std::cout << "entered 4 if" << std::endl;
                     voli->acceptOrder(*ori);
                     if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
                         ori->setStatus(OrderStatus::COLLECTING);
+                        ori->setCollectorId(coliVoli->getId());
                     }
                     else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
                         ori->setStatus(OrderStatus::DELIVERING);
+                        ori->setDriverId(deliVoli->getId());
+
                     }
-                    voli->step();
+                    std::cout << "entered 5 before step" << std::endl;
+                    
                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+                                        std::cout << "entered 6 after step 1" << std::endl;
+
+                    voli->step();
+                                        std::cout << "entered 7 after step 2" << std::endl;
+
                 }
             }
         }
         for (Volunteer* voli : wareHouse.getvolunteersVector())
         {
+            std::cout << "entered 6 for" << std::endl;
             if(voli->getCompletedOrderId() != NO_ORDER){
                 // we need to confirm that the limited is included in our if
                 if (CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
@@ -117,13 +76,14 @@ void SimulateStep::act(WareHouse &wareHouse) {
                     wareHouse.frominProcessToCompleted(deliVoli->getActiveOrderId());
                 }
             }
-
-            if(!voli->hasOrdersLeft()){
+            std::cout << "end all 1?" << std::endl;
+            if(!(voli->hasOrdersLeft())){
+                std::cout << "enter del" << std::endl;
                 wareHouse.deleteVolunteer(voli);
             }
         }
-        }
-        
+        std::cout << "end all 2?" << std::endl;
+
     }    
 }
         std::string SimulateStep::toString() const {
@@ -150,13 +110,7 @@ void AddOrder::act(WareHouse &wareHouse){
     }
     // the id is ok
     else{    
-                //std::cout << &wareHouse.getCustomerVector()<< std::endl;
-                std::cout << wareHouse.getCustomerVector().size() << std::endl;
-                std::cout << wareHouse.getCustomerVector().at(0) << std::endl;
-
         for(Customer* cus : wareHouse.getCustomerVector()){
-                std::cout << "L159 in the for of cus " << cus->getId() << std::endl;
-
             if(cus->getId() == customerId){
                 // if the customer reaches his maxOrders limit: ”Cannot place this order”.
                 if (cus->getOrdersIds().size() < cus->getMaxOrders())

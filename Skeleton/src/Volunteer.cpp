@@ -68,7 +68,7 @@ using std:: vector;
     }
 
     bool CollectorVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy() && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
+        if((!isBusy()) && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
             return true;
         }
 
@@ -110,7 +110,7 @@ using std:: vector;
         }
 
         bool LimitedCollectorVolunteer::canTakeOrder(const Order &order) const{
-            if(!isBusy() && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
+            if((!isBusy()) && hasOrdersLeft() && order.getStatus() == OrderStatus::PENDING){
                 return true;
             }
 
@@ -177,7 +177,7 @@ using std:: vector;
     }
 
     bool  DriverVolunteer::canTakeOrder(const Order &order) const{
-        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->maxDistance && order.getStatus() == OrderStatus::COLLECTING){
+        if((!isBusy()) && hasOrdersLeft() && order.getDistance() <= this->maxDistance && order.getStatus() == OrderStatus::COLLECTING){
             return true;
         }
 
@@ -229,7 +229,7 @@ using std:: vector;
     }
     
     bool LimitedDriverVolunteer::canTakeOrder(const Order &order) const {
-        if(!isBusy() && hasOrdersLeft() && order.getDistance() <= this->getMaxDistance() && order.getStatus() == OrderStatus::COLLECTING){
+        if((!isBusy()) && hasOrdersLeft() && order.getDistance() <= this->getMaxDistance() && order.getStatus() == OrderStatus::COLLECTING){
             return true;
         }
 
