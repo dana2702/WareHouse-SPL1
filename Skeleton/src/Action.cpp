@@ -36,13 +36,10 @@ SimulateStep::SimulateStep(int numOfSteps): numOfSteps(numOfSteps){};
 void SimulateStep::act(WareHouse &wareHouse) {
     for (int i = 0; i < numOfSteps; i++){     
         for(Order* ori : wareHouse.getPendingOrderVector()){
-            std::cout << "entered 2 for" << std::endl;
             bool flag = false;
             for(Volunteer* voli : wareHouse.getvolunteersVector()){
-            std::cout << "entered 3 for" << std::endl;
                 if(voli->canTakeOrder(*ori) && !flag){
                     flag=true;
-                    std::cout << "entered 4 if" << std::endl;
                     voli->acceptOrder(*ori);
                     if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
                         ori->setStatus(OrderStatus::COLLECTING);
@@ -52,21 +49,14 @@ void SimulateStep::act(WareHouse &wareHouse) {
                         ori->setStatus(OrderStatus::DELIVERING);
                         ori->setDriverId(deliVoli->getId());
 
-                    }
-                    std::cout << "entered 5 before step" << std::endl;
-                    
+                    }                    
                     wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
-                                        std::cout << "entered 6 after step 1" << std::endl;
-
                     voli->step();
-                                        std::cout << "entered 7 after step 2" << std::endl;
-
                 }
             }
         }
         for (Volunteer* voli : wareHouse.getvolunteersVector())
         {
-            std::cout << "entered 6 for" << std::endl;
             if(voli->getCompletedOrderId() != NO_ORDER){
                 // we need to confirm that the limited is included in our if
                 if (CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
@@ -76,18 +66,20 @@ void SimulateStep::act(WareHouse &wareHouse) {
                     wareHouse.frominProcessToCompleted(deliVoli->getActiveOrderId());
                 }
             }
-            std::cout << "end all 1?" << std::endl;
             if(!(voli->hasOrdersLeft())){
-                std::cout << "enter del" << std::endl;
                 wareHouse.deleteVolunteer(voli);
             }
         }
-        std::cout << "end all 2?" << std::endl;
-
     }    
 }
         std::string SimulateStep::toString() const {
-            return ("Step " +numOfSteps); 
+            if(getStatus() == ActionStatus::COMPLETED){
+                return ("simulateStep " + to_string(numOfSteps) + "COMPLETED");
+            }
+            else{
+                return ("simulateStep " + to_string(numOfSteps) + "ERROR");
+            }
+            
         }
         SimulateStep* SimulateStep::clone() const {
             return new SimulateStep(*this);
@@ -113,21 +105,27 @@ void AddOrder::act(WareHouse &wareHouse){
         for(Customer* cus : wareHouse.getCustomerVector()){
             if(cus->getId() == customerId){
                 // if the customer reaches his maxOrders limit: ”Cannot place this order”.
-                if (cus->getOrdersIds().size() < cus->getMaxOrders())
+                if (!cus->canMakeOrder())
                 {
                     error("Cannot place this order 2");
+                    std::cout << getErrorMsg() << std::endl;
+                    break;
                 }
-            }    // the input is ok
-            else{
-                //std::cout << "Performing order action with number: " << customerId << std::endl;
-                // the code for 'order' action here
-                Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
+                // the input is ok
+                else{
+                    //std::cout << "Performing order action with number: " << customerId << std::endl;
+                    // the code for 'order' action here
+                    Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
 
-                cus->addOrder(newOrder->getId());
-
-                wareHouse.addOrder(newOrder);
-
-                complete();
+                    if(cus->addOrder(newOrder->getId())==newOrder->getId()){
+                        wareHouse.addOrder(newOrder);
+                        complete();
+                    }
+                    else{
+                        error("Cannot place this order 3");
+                        std::cout << getErrorMsg() << std::endl;
+                    }
+            }    
             }
         }
     }
@@ -175,8 +173,6 @@ AddCustomer::AddCustomer(const string &customerName, const string &customerType,
             wareHouse.addCustomer(cust);
         }
 
-        wareHouse.setCustomerCounter(wareHouse.getCustomerCounter()+1);
-
         complete();
     }
 
@@ -185,7 +181,6 @@ AddCustomer::AddCustomer(const string &customerName, const string &customerType,
     }
 
     string AddCustomer::toString() const{
-        std::cout << "in addCust"<< std::endl;           
         if(customerType==CustomerType::Civilian){
             if(getStatus() == ActionStatus::COMPLETED){
                 return ("customer "+ customerName+  " civilian "+ std::to_string(distance) + " "+std::to_string(maxOrders)+ " COMPLETED") ;
@@ -212,7 +207,7 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 
     // if the provided order ID doesn’t exist: ”Cannot place this order”.
         if (orderId >= wareHouse.getOrderCounter()){
-            error("Order doesn't exist 250");
+            error("Order doesn't exist");
             std::cout << getErrorMsg() << std::endl;           
          }
         // the id is ok
@@ -291,10 +286,10 @@ PrintOrderStatus::PrintOrderStatus(int id):orderId(id){}
 
     string PrintOrderStatus::toString() const{
         if(getStatus() == ActionStatus::COMPLETED){
-                return ("PrintOrderStatus "+ to_string(orderId) + " COMPLETED") ;
+                return ("orderStatus "+ to_string(orderId) + " COMPLETED") ;
         }
         else{
-                return ("PrintOrderStatus "+ to_string(orderId) + " ERROR") ;
+                return ("orderStatus "+ to_string(orderId) + " ERROR") ;
         }
     }
 
@@ -313,7 +308,6 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){
         else{
             std::cout << "CustomerID:"<< customerId << std::endl;
             for(Order* ord : wareHouse.getPendingOrderVector()){
-                            std::cout << "size is " << wareHouse.getPendingOrderVector().size()<< customerId << std::endl;
                 if(ord->getCustomerId() == customerId){
                     std::cout << "OrderID: "<< ord->getId()<<  std::endl;
                     std::cout << "OrderStatus: PENDING"<<  std::endl;
@@ -336,6 +330,9 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){
                     std::cout << "OrderStatus: COMPLETED"<<  std::endl;
                     }
             }
+
+            std::cout << "numOrdersLeft: "<< (wareHouse.getCustomer(customerId).getMaxOrders() -  wareHouse.getCustomer(customerId).getNumOrders())<< std::endl;
+
             complete();
         }
         
@@ -350,10 +347,10 @@ PrintCustomerStatus::PrintCustomerStatus(int customerId):customerId(customerId){
 
     string PrintCustomerStatus::toString() const{
          if(getStatus() == ActionStatus::COMPLETED){
-                return ("PrintCustomerStatus "+ to_string(customerId) + " COMPLETED") ;
+                return ("customerStatus "+ to_string(customerId) + " COMPLETED") ;
         }
         else{
-                return ("PrintCustomerStatus "+ to_string(customerId) + " ERROR") ;
+                return ("customerStatus "+ to_string(customerId) + " ERROR") ;
         }
     }
 
@@ -364,7 +361,7 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
 
     void PrintVolunteerStatus:: act(WareHouse &wareHouse){
         // if the provided Volunteer ID doesn’t exist: ”Cannot place this order”.
-        if (volunteerId > wareHouse.getVolunteerCounter()){
+        if (volunteerId >= wareHouse.getVolunteerCounter()){
             error("Volunteer doesn’t exist");
             std::cout << getErrorMsg() << std::endl;
         }
@@ -382,27 +379,28 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
                         std::cout << "isBusy: False"<< std::endl;
                         std::cout << "OrderID: None"<<  std::endl;
                     }
-                    if(DriverVolunteer* driverVoli = dynamic_cast<DriverVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< driverVoli->getDistanceLeft()<< std::endl;
-                        std::cout << "OrdersLeft: no limit"<<  std::endl;
-                    }
+                    
                     if(LimitedDriverVolunteer* LidriverVoli = dynamic_cast<LimitedDriverVolunteer*>(voli)){
                         std::cout << "TimeLeft: "<< LidriverVoli->getDistanceLeft()<< std::endl;
                         std::cout << "OrdersLeft:"<< LidriverVoli->getNumOrdersLeft()<< std::endl;
                     }
-                    if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< coliVoli->getTimeLeft()<< std::endl;
+                    else if(DriverVolunteer* driverVoli = dynamic_cast<DriverVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< driverVoli->getDistanceLeft()<< std::endl;
                         std::cout << "OrdersLeft: no limit"<<  std::endl;
                     }
                     if(LimitedCollectorVolunteer* LicoliVoli = dynamic_cast<LimitedCollectorVolunteer*>(voli)){
                         std::cout << "TimeLeft: "<< LicoliVoli->getTimeLeft()<< std::endl;
                         std::cout << "OrdersLeft:"<< LicoliVoli->getNumOrdersLeft()<< std::endl;
                     }
+                    else if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
+                        std::cout << "TimeLeft: "<< coliVoli->getTimeLeft()<< std::endl;
+                        std::cout << "OrdersLeft: no limit"<<  std::endl;
+                    }
+                   
                     flag =true;
                     complete();
+                    break;
                 }    
-                
-                
             }
             
             if(!flag){
@@ -423,10 +421,10 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
 
     string PrintVolunteerStatus::toString() const{
         if(getStatus() == ActionStatus::COMPLETED){
-                return ("PrintVolunteerStatus "+ to_string(volunteerId) + " COMPLETED") ;
+                return ("volunteerStatus "+ to_string(volunteerId) + " COMPLETED") ;
         }
         else{
-                return ("PrintVolunteerStatus "+ to_string(volunteerId) + " ERROR") ;
+                return ("volunteerStatus "+ to_string(volunteerId) + " ERROR") ;
         }     
     }
 
@@ -449,10 +447,10 @@ PrintActionsLog::PrintActionsLog(){}
 
     string PrintActionsLog::toString() const{
         if(getStatus() == ActionStatus::COMPLETED){
-                return ("PrintActionsLog COMPLETED") ;
+                return ("log COMPLETED") ;
         }
         else{
-                return ("PrintActionsLog  ERROR") ;
+                return ("log  ERROR") ;
         }    
     }
 
@@ -463,13 +461,22 @@ Close::Close(){}
     void Close:: act(WareHouse &wareHouse){
         std::stringstream outputString;
         int numOfOreders = wareHouse.getOrderCounter();
-        std::cout << numOfOreders << std::endl;
-        // for(int i = 0; i < numOfOreders; i++){
-        //     outputString << "OrderID: " << i;
-        //     outputString << ", CustomerID: " << wareHouse.getOrder(i).getCustomerId();
-        //     outputString << ", Status: " << PrintOrderStatus(wareHouse.getOrder(i).getId()).toString() << endl;
-            
-        // }
+        for(int i = 0; i < numOfOreders; i++){
+            outputString << "OrderID: " << i;
+            outputString << ", CustomerID: " << wareHouse.getOrder(i).getCustomerId();
+            if(wareHouse.getOrder(i).getStatus() == OrderStatus::COMPLETED){
+            outputString << ", Status: COMPLETED"  << endl;
+            }
+            else if(wareHouse.getOrder(i).getStatus() == OrderStatus::DELIVERING){
+                outputString << ", Status: DELIVERING"  << endl;
+            }
+            else if(wareHouse.getOrder(i).getStatus() == OrderStatus::COLLECTING){
+                outputString << ", Status: COLLECTING"  << endl;
+            }
+            else if(wareHouse.getOrder(i).getStatus() == OrderStatus::PENDING){
+                outputString << ", Status: PENDING"  << endl;
+            }
+        }
         cout << outputString.str() << endl;
         complete();
         wareHouse.close();

@@ -28,7 +28,7 @@ Customer::Customer(int id, const string &name, int locationDistance, int maxOrde
     int Customer::getNumOrders() const{
         return this->ordersId.size();
     } 
-            
+  
     bool Customer::canMakeOrder() const{
         if (this->getNumOrders() < this->getMaxOrders()){
             return true;
@@ -41,15 +41,10 @@ Customer::Customer(int id, const string &name, int locationDistance, int maxOrde
     }
 
     int Customer::addOrder(int orderId){
-        
-        for (int i = 0; i < ordersId.size(); i++){
-            if (ordersId.at(i)==orderId){
-                if(this->canMakeOrder()){
-                    this->ordersId.push_back(orderId);
-                    return orderId;
-                }
-            }    
-        }
+        if(this->canMakeOrder()){
+            this->ordersId.push_back(orderId);
+            return orderId;
+        }   
         return -1;
     }
 

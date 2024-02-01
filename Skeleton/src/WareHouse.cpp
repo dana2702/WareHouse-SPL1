@@ -35,7 +35,6 @@ void WareHouse::start(){
             // Extract the number for step action
             int number;
             if (iss >> number) {
-                std::cout << "Performing step action with number: " << number << std::endl;
                 SimulateStep* step = new SimulateStep(number);
                 addAction(step);
             } 
@@ -102,14 +101,13 @@ void WareHouse::start(){
 };
 
 void WareHouse::addOrder(Order* order){
-    std::cout << "problem? add order 123" << std::endl;
     pendingOrders.push_back(order);
     orderCounter++;
 }
 
 void WareHouse::addAction(BaseAction* action){
-            action->act(*this);
-            actionsLog.push_back(action);
+    action->act(*this);
+    actionsLog.push_back(action);
 };
 
 Customer& WareHouse::getCustomer(int customerId) const {
@@ -251,8 +249,8 @@ void WareHouse::close(){
 }
 
 void WareHouse::open(){
+    std::cout << "Warehouse is open!" << std::endl;
     isOpen=true;
-    //.....
 }
 
 int WareHouse::getOrderCounter() const{
@@ -311,6 +309,7 @@ void WareHouse::deleteVolunteer(Volunteer* volunteer){
 
 void WareHouse::addCustomer(Customer* customer){
     customers.push_back(customer);
+    customerCounter++;
 };
 
 vector<Customer*> WareHouse::getCustomerVector() const{
