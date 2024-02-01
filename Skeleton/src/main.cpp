@@ -1,4 +1,4 @@
-#include "/home/naomi/SPL/SPL_1/hadassi/Skeleton/include/WareHouse.h"
+#include "WareHouse.h"
 #include <iostream>
 #include <fstream>
 
@@ -17,10 +17,10 @@ int main(int argc, char** argv){
     string configurationFile = argv[1];
     WareHouse wareHouse(configurationFile);
     wareHouse.start();
-    // if(backup!=nullptr){
-    // 	delete backup;
-    // 	backup = nullptr;
-    // }
+    if(backup!=nullptr){
+    	delete backup;
+    	backup = nullptr;
+    }
     return 0;
 }
 

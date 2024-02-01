@@ -7,7 +7,7 @@ using std:: vector;
 
 
     // Constructor
-    Volunteer::Volunteer(int id, const std::string &name):  id(id), name(name), completedOrderId(NO_ORDER), activeOrderId(NO_ORDER) {}
+    Volunteer::Volunteer(int id, const std::string &name): activeOrderId(NO_ORDER) , completedOrderId(NO_ORDER) , id(id) , name(name){}
 
         int Volunteer::getId() const{
             return this->id;

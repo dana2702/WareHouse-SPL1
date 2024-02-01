@@ -1,4 +1,3 @@
-#pragma once
 #include "Action.h"
 #include "Volunteer.h"
 #include <iostream>
@@ -6,7 +5,7 @@
 using namespace std;
 
 
-BaseAction::BaseAction(){}
+BaseAction::BaseAction():errorMsg(),status(){}
 
     ActionStatus BaseAction::getStatus() const{
         return this->status;
@@ -507,7 +506,6 @@ BackupWareHouse::BackupWareHouse(){}
         }
         backup = new WareHouse(wareHouse); 
         complete();
-        wareHouse.addAction(this);
     }
 
 
@@ -521,7 +519,7 @@ BackupWareHouse::BackupWareHouse(){}
                 return ("BackupWareHouse COMPLETED") ;
         }
         else{
-                return ("BackupWareHouse  ERROR") ;
+                return ("BackupWareHouse ERROR") ;
         }     
     }
 

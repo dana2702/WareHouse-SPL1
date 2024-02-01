@@ -1,4 +1,3 @@
-#pragma once
 #include "Customer.h"
 #include <iostream>
 #include <vector>

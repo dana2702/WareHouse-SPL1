@@ -1,4 +1,3 @@
-#pragma once
 #include "WareHouse.h"
 #include "Action.h"
 #include "Customer.h"
@@ -88,9 +87,13 @@ void WareHouse::start(){
         }
 
         else if (action =="backup"){  
+            BackupWareHouse* back = new BackupWareHouse();
+            addAction(back);
         }
 
         else if (action =="restore"){  
+            RestoreWareHouse* restore = new RestoreWareHouse();
+            addAction(restore);
         }
         else{
             std::cout << "try again!" << std::endl;
@@ -111,6 +114,7 @@ void WareHouse::addAction(BaseAction* action){
 };
 
 Customer& WareHouse::getCustomer(int customerId) const {
+        Customer* no_cus = nullptr;
         // Iterate through the vector to search for the customer
         for (Customer* cus : customers) {
             // Check if the customerId of the current customer matches the given customerId
@@ -119,10 +123,12 @@ Customer& WareHouse::getCustomer(int customerId) const {
                 return *cus;
             }
         }
+        return *no_cus;
     };
 
 Volunteer& WareHouse::getVolunteer(int volunteerId) const {
         // Iterate through the vector to search for the customer
+        Volunteer* no_voli = nullptr;
         for (Volunteer* voli : volunteers) {
             // Check if the customerId of the current customer matches the given customerId
             if (voli->getId() == volunteerId) {
@@ -130,10 +136,12 @@ Volunteer& WareHouse::getVolunteer(int volunteerId) const {
                 return *voli;
             }
         }
+        return *no_voli;
     };
 
 Order& WareHouse::getOrder(int orderId) const {
         // Iterate through the vector to search for the customer
+        Order *no_ori = nullptr;
        for(Order* ord : pendingOrders){
                 if(ord->getId() == orderId){
                     return *ord;
@@ -149,6 +157,7 @@ Order& WareHouse::getOrder(int orderId) const {
                         return *ord;
                     }
         }
+        return *no_ori;
     };
 
 
