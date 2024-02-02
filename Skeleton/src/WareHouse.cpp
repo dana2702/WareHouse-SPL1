@@ -375,5 +375,81 @@ WareHouse:: ~WareHouse(){
 
 };
 
+WareHouse::WareHouse(const WareHouse &other) {
+    isOpen = other.isOpen;
+    customerCounter = other.customerCounter;
+    volunteerCounter = other.volunteerCounter;
+    orderCounter = other.orderCounter;
+
+    // Copy actionsLog
+    for (BaseAction *action : other.actionsLog) {
+        actionsLog.push_back(action->clone());
+    }
+
+    // Copy volunteers
+    for (Volunteer *volunteer : other.volunteers) {
+        volunteers.push_back(volunteer->clone());
+    }
+
+    // Copy pendingOrders
+    for (Order *order : other.pendingOrders) {
+        pendingOrders.push_back(order->clone());
+    }
+
+    // Copy inProcessOrders
+    for (Order *order : other.inProcessOrders) {
+        inProcessOrders.push_back(order->clone());
+    }
+
+    // Copy completedOrders
+    for (Order *order : other.completedOrders) {
+        completedOrders.push_back(order->clone());
+    }
+
+    // Copy customers
+    for (Customer *customer : other.customers) {
+        customers.push_back(customer->clone());
+    }
+}
+
+
+
+
+// Move assignment operator
+WareHouse& WareHouse::operator=(WareHouse &&other) noexcept {
+    if (this == &other)
+        return *this;
+
+    // Move member variables
+    isOpen = std::move(other.isOpen);
+    actionsLog = std::move(other.actionsLog);
+    volunteers = std::move(other.volunteers);
+    pendingOrders = std::move(other.pendingOrders);
+    inProcessOrders = std::move(other.inProcessOrders);
+    completedOrders = std::move(other.completedOrders);
+    customers = std::move(other.customers);
+    customerCounter = std::move(other.customerCounter);
+    volunteerCounter = std::move(other.volunteerCounter);
+    orderCounter = std::move(other.orderCounter);
+
+    // Reset the moved object
+    other.isOpen = false;
+    other.customerCounter = 0;
+    other.volunteerCounter = 0;
+    other.orderCounter = 0;
+    other.actionsLog.clear();
+    other.volunteers.clear();
+    other.pendingOrders.clear();
+    other.inProcessOrders.clear();
+    other.completedOrders.clear();
+    other.customers.clear();
+
+    return *this;
+}
+
+
+
+
+
 
 

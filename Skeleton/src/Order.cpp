@@ -48,3 +48,7 @@ using namespace std;
     int Order::getDistance() const{
         return this->distance;
     }
+
+    Order* Order::clone() const {
+            return new Order(*this);
+    };

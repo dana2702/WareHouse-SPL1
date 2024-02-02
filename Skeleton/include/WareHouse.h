@@ -41,7 +41,11 @@ class WareHouse {
         void frominProcessToCompleted(int orderID);
         void deleteVolunteer(Volunteer* volunteer);
         void addCustomer(Customer* customer);
-        ~WareHouse();
+        ~WareHouse(); //destructor
+
+        //extars
+        WareHouse(const WareHouse &other); //copy constructor
+        WareHouse& operator=(WareHouse &&other) noexcept; //move assignment operator
         
 
     private:
