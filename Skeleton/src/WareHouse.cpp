@@ -197,6 +197,7 @@ void WareHouse::parseText(const string &configFilePath){
 
             // add customer to warehouse
             if (newCustomer) {
+
                 this->addCustomer(newCustomer);
             }
         } else if (type == "volunteer") {
@@ -283,6 +284,7 @@ void WareHouse::frominProcessToPending(int orderID){
         if((*it)->getId() == orderID ){
            pendingOrders.push_back(*it);
            inProcessOrders.erase(it);
+           break;
         }
     }
 };
@@ -292,6 +294,7 @@ void WareHouse::frominProcessToCompleted(int orderID){
         if((*it)->getId() == orderID){
            completedOrders.push_back(*it);
            inProcessOrders.erase(it);
+           break;
         }
     }
 };
