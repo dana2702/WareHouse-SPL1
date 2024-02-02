@@ -375,11 +375,7 @@ WareHouse:: ~WareHouse(){
 
 };
 
-WareHouse::WareHouse(const WareHouse &other) {
-    isOpen = other.isOpen;
-    customerCounter = other.customerCounter;
-    volunteerCounter = other.volunteerCounter;
-    orderCounter = other.orderCounter;
+WareHouse::WareHouse(const WareHouse &other):isOpen(other.isOpen), actionsLog(), volunteers(), pendingOrders(), inProcessOrders(), completedOrders(), customers(), customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), orderCounter(other.orderCounter)  {
 
     // Copy actionsLog
     for (BaseAction *action : other.actionsLog) {

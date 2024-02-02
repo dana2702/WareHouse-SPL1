@@ -30,6 +30,7 @@ class Order {
 
         // extras:
         int getDistance() const;
+        Order* clone() const;
 
     private:
         const int id;
