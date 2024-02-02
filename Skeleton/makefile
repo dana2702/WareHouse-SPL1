@@ -11,4 +11,12 @@ compile:
 	g++ -Iinclude -g -Wall -Weffc++ -c -o bin/WareHouse.o src/WareHouse.cpp
  	
 clean:
-	rm -f bin/*	
+#	rm -f bin/*
+	rm -f ./bin/*.o
+	rm -f ./bin/warehouse
+
+cleanObjAndRun:
+	rm -f *.o
+	clear
+	valgrind --leak-check=full --show-reachable=yes ./bin/warehouse ./bin/rest/input_file.txt
+

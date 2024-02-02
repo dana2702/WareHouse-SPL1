@@ -187,11 +187,9 @@ void WareHouse::parseText(const string &configFilePath){
 
             Customer *newCustomer = nullptr;
             if (customerType == "soldier") {
-                newCustomer = new SoldierCustomer(customers.size(), name,
-                                                  distance, maxOrders);
+                newCustomer = new SoldierCustomer(customers.size(), name, distance, maxOrders);
             } else if (customerType == "civilian") {
-                newCustomer = new CivilianCustomer(customers.size(), name,
-                                                   distance, maxOrders);
+                newCustomer = new CivilianCustomer(customers.size(), name,distance, maxOrders);
             } else {
                 std::cerr << "Unknown customer type: " << customerType
                           << std::endl;
@@ -214,24 +212,18 @@ void WareHouse::parseText(const string &configFilePath){
 
             Volunteer *newVolunteer = nullptr;
             if (volunteerType == "collector") {
-                newVolunteer =
-                    new CollectorVolunteer(volunteers.size(), name, coolDown);
+                newVolunteer = new CollectorVolunteer(volunteers.size(), name, coolDown);
             } else if (volunteerType == "limited_collector") {
                 iss >> maxOrders;
-                newVolunteer = new LimitedCollectorVolunteer(
-                    volunteers.size(), name, coolDown, maxOrders);
+                newVolunteer = new LimitedCollectorVolunteer(volunteers.size(), name, coolDown, maxOrders);
             } else if (volunteerType == "driver") {
                 iss >> maxDistance >> distancePerStep;
-                newVolunteer = new DriverVolunteer(
-                    volunteers.size(), name, maxDistance, distancePerStep);
+                newVolunteer = new DriverVolunteer(volunteers.size(), name, maxDistance, distancePerStep);
             } else if (volunteerType == "limited_driver") {
                 iss >> maxDistance >> distancePerStep >> maxOrders;
-                newVolunteer = new LimitedDriverVolunteer(
-                    volunteers.size(), name, maxDistance, distancePerStep,
-                    maxOrders);
+                newVolunteer = new LimitedDriverVolunteer(volunteers.size(), name, maxDistance, distancePerStep,maxOrders);
             } else {
-                std::cerr << "Unknown volunteer type: " << volunteerType
-                          << std::endl;
+                std::cerr << "Volunteer type unknown : " << volunteerType << std::endl;
             }
 
             // add to warehouse
@@ -342,36 +334,39 @@ vector<Volunteer*> WareHouse::getvolunteersVector() const{
     return volunteers;
 };
 
-WareHouse:: ~WareHouse(){
-    for(auto customer : customers){
-        delete customer;
-    }
-    customers.clear();
 
-    for(auto voli : volunteers){
+//destructor
+WareHouse:: ~WareHouse(){
+    for(BaseAction* action : actionsLog){
+        delete action;
+    }
+    actionsLog.clear();
+
+    for(Volunteer* voli : volunteers){
         delete voli;
     }
     volunteers.clear();
 
-    for(auto ori : pendingOrders){
+    for(Order* ori : pendingOrders){
         delete ori;
     }
     pendingOrders.clear();
 
-    for(auto ori : inProcessOrders){
+    for(Order* ori : inProcessOrders){
         delete ori;
     }
     inProcessOrders.clear();
 
-    for(auto ori : completedOrders){
+    for(Order* ori : completedOrders){
         delete ori;
     }
     completedOrders.clear();
 
-    for(auto action : actionsLog){
-        delete action;
+    for(Customer* customer : customers){
+        delete customer;
     }
-    actionsLog.clear();
+    customers.clear();
+
 
 };
 
