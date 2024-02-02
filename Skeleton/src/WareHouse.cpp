@@ -274,9 +274,6 @@ int WareHouse::getCustomerCounter() const{
     return customerCounter;
 };
 
-void WareHouse::setCustomerCounter(int num){
-    customerCounter = num;
-};
 
 void WareHouse::fromPendingToinProcess(int orderID){
     for (auto it = pendingOrders.begin(); it != pendingOrders.end();++it){
@@ -343,6 +340,39 @@ vector<BaseAction*> WareHouse::getActionsLog() const{
 
 vector<Volunteer*> WareHouse::getvolunteersVector() const{
     return volunteers;
+};
+
+WareHouse:: ~WareHouse(){
+    for(auto customer : customers){
+        delete customer;
+    }
+    customers.clear();
+
+    for(auto voli : volunteers){
+        delete voli;
+    }
+    volunteers.clear();
+
+    for(auto ori : pendingOrders){
+        delete ori;
+    }
+    pendingOrders.clear();
+
+    for(auto ori : inProcessOrders){
+        delete ori;
+    }
+    inProcessOrders.clear();
+
+    for(auto ori : completedOrders){
+        delete ori;
+    }
+    completedOrders.clear();
+
+    for(auto action : actionsLog){
+        delete action;
+    }
+    actionsLog.clear();
+
 };
 
 

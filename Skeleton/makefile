@@ -1,7 +1,7 @@
 
 all: clean compile link 
 link:
-	g++ -o bin/runHere bin/main.o bin/Order.o bin/Volunteer.o bin/Customer.o bin/Action.o bin/WareHouse.o
+	g++ -o bin/warehouse bin/main.o bin/Order.o bin/Volunteer.o bin/Customer.o bin/Action.o bin/WareHouse.o
 compile:
 	g++ -Iinclude -g -Wall -Weffc++ -c -o bin/main.o src/main.cpp
 	g++ -Iinclude -g -Wall -Weffc++ -c -o bin/Order.o src/Order.cpp
