@@ -197,7 +197,7 @@ void WareHouse::parseText(const string &configFilePath){
 
             // add customer to warehouse
             if (newCustomer) {
-                AddCustomer (name,customerType,distance,maxOrders).act(*this);
+                this->addCustomer(newCustomer);
             }
         } else if (type == "volunteer") {
             // Parse volunteer
