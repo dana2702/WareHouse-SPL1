@@ -207,15 +207,17 @@ void WareHouse::parseText(const string &configFilePath){
             int coolDown;
             int maxDistance;
             int distancePerStep;
-            int maxOrders = -1;
+            int maxOrders; //= -1;
 
-            iss >> name >> volunteerType >> coolDown;
+            iss >> name >> volunteerType;
 
             Volunteer *newVolunteer = nullptr;
             if (volunteerType == "collector") {
+                iss >> coolDown;
                 newVolunteer = new CollectorVolunteer(volunteers.size(), name, coolDown);
             } else if (volunteerType == "limited_collector") {
-                iss >> maxOrders;
+                
+                iss >> coolDown >> maxOrders;
                 newVolunteer = new LimitedCollectorVolunteer(volunteers.size(), name, coolDown, maxOrders);
             } else if (volunteerType == "driver") {
                 iss >> maxDistance >> distancePerStep;
