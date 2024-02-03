@@ -50,8 +50,6 @@ using std:: vector;
 
     void CollectorVolunteer::step(){
         if(decreaseCoolDown()){
-            // send the order to driver (pending)
-            std::cout << "I finished my job -collector" << endl;
             this->completedOrderId=this->activeOrderId;
         }
     }
@@ -208,8 +206,7 @@ using std:: vector;
     }
 
     void  DriverVolunteer::step(){
-        if(decreaseDistanceLeft()){
-            std::cout << "I finished my job -driver" << endl;    
+        if(decreaseDistanceLeft()){   
             this->completedOrderId= this->activeOrderId;
         }
     }

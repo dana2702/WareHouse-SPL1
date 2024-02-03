@@ -25,13 +25,11 @@ void WareHouse::start(){
         std::cout << "Enter action: ";
         std::getline(std::cin, input);
 
-        // Extract the action (first word)
+        
         std::istringstream iss(input);
         std::string action;
         iss >> action;
-        // Perform actions based on the first word
         if (action == "step") {
-            // Extract the number for step action
             int number;
             if (iss >> number) {
                 SimulateStep* step = new SimulateStep(number);
@@ -39,7 +37,6 @@ void WareHouse::start(){
             } 
         } 
         else if (action == "order") {
-            // Extract the number for order action
             int number;
             if (iss >> number) {
                 AddOrder* order = new AddOrder(number);
@@ -117,9 +114,8 @@ Customer& WareHouse::getCustomer(int customerId) const {
         Customer* no_cus = nullptr;
         // Iterate through the vector to search for the customer
         for (Customer* cus : customers) {
-            // Check if the customerId of the current customer matches the given customerId
+        // Check if the customerId of the current customer matches the given customerId
             if (cus->getId() == customerId) {
-                // Return a reference to the found customer
                 return *cus;
             }
         }
@@ -127,7 +123,6 @@ Customer& WareHouse::getCustomer(int customerId) const {
     };
 
 Volunteer& WareHouse::getVolunteer(int volunteerId) const {
-        // Iterate through the vector to search for the customer
         Volunteer* no_voli = nullptr;
         for (Volunteer* voli : volunteers) {
             // Check if the customerId of the current customer matches the given customerId
@@ -140,7 +135,6 @@ Volunteer& WareHouse::getVolunteer(int volunteerId) const {
     };
 
 Order& WareHouse::getOrder(int orderId) const {
-        // Iterate through the vector to search for the customer
         Order *no_ori = nullptr;
        for(Order* ord : pendingOrders){
                 if(ord->getId() == orderId){
@@ -177,7 +171,6 @@ void WareHouse::parseText(const string &configFilePath){
         iss >> type;
 
         if (type == "customer") {
-            // Parse customer
             std::string name;
             std::string customerType;
             int distance;
@@ -195,13 +188,11 @@ void WareHouse::parseText(const string &configFilePath){
                           << std::endl;
             }
 
-            // add customer to warehouse
             if (newCustomer) {
 
                 this->addCustomer(newCustomer);
             }
         } else if (type == "volunteer") {
-            // Parse volunteer
             std::string name;
             std::string volunteerType;
             int coolDown;
@@ -229,7 +220,6 @@ void WareHouse::parseText(const string &configFilePath){
                 std::cerr << "Volunteer type unknown : " << volunteerType << std::endl;
             }
 
-            // add to warehouse
             if (newVolunteer) {
                 volunteerCounter++;
                 volunteers.push_back(newVolunteer);
@@ -310,6 +300,7 @@ void WareHouse::deleteVolunteer(Volunteer* volunteer){
     }
 }
 
+
 void WareHouse::addCustomer(Customer* customer){
     customers.push_back(customer);
     customerCounter++;
@@ -377,32 +368,32 @@ WareHouse:: ~WareHouse(){
 
 WareHouse::WareHouse(const WareHouse &other):isOpen(other.isOpen), actionsLog(), volunteers(), pendingOrders(), inProcessOrders(), completedOrders(), customers(), customerCounter(other.customerCounter), volunteerCounter(other.volunteerCounter), orderCounter(other.orderCounter)  {
 
-    // Copy actionsLog
+
     for (BaseAction *action : other.actionsLog) {
         actionsLog.push_back(action->clone());
     }
 
-    // Copy volunteers
+
     for (Volunteer *volunteer : other.volunteers) {
         volunteers.push_back(volunteer->clone());
     }
 
-    // Copy pendingOrders
+
     for (Order *order : other.pendingOrders) {
         pendingOrders.push_back(order->clone());
     }
 
-    // Copy inProcessOrders
+
     for (Order *order : other.inProcessOrders) {
         inProcessOrders.push_back(order->clone());
     }
 
-    // Copy completedOrders
+
     for (Order *order : other.completedOrders) {
         completedOrders.push_back(order->clone());
     }
 
-    // Copy customers
+
     for (Customer *customer : other.customers) {
         customers.push_back(customer->clone());
     }
@@ -411,12 +402,11 @@ WareHouse::WareHouse(const WareHouse &other):isOpen(other.isOpen), actionsLog(),
 
 
 
-// Move assignment operator
 WareHouse& WareHouse::operator=(WareHouse &&other) noexcept {
     if (this == &other)
         return *this;
 
-    // Move member variables
+
     isOpen = std::move(other.isOpen);
     actionsLog = std::move(other.actionsLog);
     volunteers = std::move(other.volunteers);
@@ -428,7 +418,7 @@ WareHouse& WareHouse::operator=(WareHouse &&other) noexcept {
     volunteerCounter = std::move(other.volunteerCounter);
     orderCounter = std::move(other.orderCounter);
 
-    // Reset the moved object
+ 
     other.isOpen = false;
     other.customerCounter = 0;
     other.volunteerCounter = 0;

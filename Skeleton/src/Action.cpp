@@ -36,10 +36,8 @@ void SimulateStep::act(WareHouse &wareHouse) {
     for (int i = 0; i < numOfSteps; i++){  
         if(wareHouse.getPendingOrderVector().size() != 0){
             for(Order* ori : wareHouse.getPendingOrderVector()){
-               // bool flag = false;
                 for(Volunteer* voli : wareHouse.getvolunteersVector()){
-                    if(voli->canTakeOrder(*ori) /*&& !flag*/){
-                        //flag=true;
+                    if(voli->canTakeOrder(*ori)){
                         voli->acceptOrder(*ori);
                         if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
                             ori->setStatus(OrderStatus::COLLECTING);
@@ -50,7 +48,7 @@ void SimulateStep::act(WareHouse &wareHouse) {
                             ori->setDriverId(deliVoli->getId());
 
                         }                    
-                        wareHouse.fromPendingToinProcess(ori->getId());// move from Pending vector to inProcess vector
+                        wareHouse.fromPendingToinProcess(ori->getId());
                         break;
                     }
                 }
@@ -90,8 +88,8 @@ void SimulateStep::act(WareHouse &wareHouse) {
                 if(!(voli->hasOrdersLeft())){
                 wareHouse.deleteVolunteer(voli);
                 }else{
-                    voli->setActiveOrderId(NO_ORDER); //added this
-                    voli->setCompletedOrderId(NO_ORDER); //added this  
+                    voli->setActiveOrderId(NO_ORDER); 
+                    voli->setCompletedOrderId(NO_ORDER); 
                 }   
             }
 
@@ -140,8 +138,6 @@ void AddOrder::act(WareHouse &wareHouse){
                 }
                 // the input is ok
                 else{
-                    //std::cout << "Performing order action with number: " << customerId << std::endl;
-                    // the code for 'order' action here
                     Order* newOrder = new Order(wareHouse.getOrderCounter(), customerId, cus->getCustomerDistance());
 
                     if(cus->addOrder(newOrder->getId())==newOrder->getId()){
