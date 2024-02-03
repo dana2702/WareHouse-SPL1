@@ -26,6 +26,9 @@ class Volunteer {
 
 //extras:
         virtual ~Volunteer();
+        void setCompletedOrderId(int newId);
+        void setActiveOrderId(int newId);
+
 
     protected:
         int activeOrderId; //Initialized to NO_ORDER if no order is being processed
@@ -52,8 +55,9 @@ class CollectorVolunteer: public Volunteer {
         void acceptOrder(const Order &order) override;
         string toString() const override;
     //extras:
-~CollectorVolunteer();
+        ~CollectorVolunteer();
         void setTimeLeft(int newTimeLeft);
+        
     
 
     private:
@@ -73,6 +77,8 @@ class LimitedCollectorVolunteer: public CollectorVolunteer {
         int getMaxOrders() const;
         int getNumOrdersLeft() const;
         string toString() const override;
+        int getOrdersLeft();
+        void setOrdersLeft();
     
 //extras:
     virtual ~LimitedCollectorVolunteer();
@@ -122,6 +128,7 @@ class LimitedDriverVolunteer: public DriverVolunteer {
 
     //extras:
          virtual ~LimitedDriverVolunteer();
+         void setOrdersLeft();
     private:
         const int maxOrders; // The number of orders the volunteer can process in the whole simulation
         int ordersLeft; // The number of orders the volunteer can still take

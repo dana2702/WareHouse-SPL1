@@ -31,6 +31,14 @@ using std:: vector;
 
         Volunteer:: ~Volunteer() {            
         }
+
+        void Volunteer::setCompletedOrderId(int newId){
+            completedOrderId = newId;
+        }
+
+        void Volunteer::setActiveOrderId(int newId){
+            activeOrderId = newId;
+        }
   
     //constructor
     CollectorVolunteer::CollectorVolunteer(int id, const string &name, int coolDown)
@@ -43,6 +51,7 @@ using std:: vector;
     void CollectorVolunteer::step(){
         if(decreaseCoolDown()){
             // send the order to driver (pending)
+            std::cout << "I finished my job -collector" << endl;
             this->completedOrderId=this->activeOrderId;
         }
     }
@@ -75,10 +84,11 @@ using std:: vector;
         return false;
     }
 
+  
+
     void CollectorVolunteer::acceptOrder(const Order &order){
         this->activeOrderId = order.getId();
         this->timeLeft = coolDown;
-        this->completedOrderId = NO_ORDER;
     }
     
     string CollectorVolunteer::toString() const{
@@ -139,7 +149,13 @@ using std:: vector;
 
         LimitedCollectorVolunteer:: ~LimitedCollectorVolunteer(){
         
-    }
+        }
+        int LimitedCollectorVolunteer::getOrdersLeft(){
+            return ordersLeft;
+        }
+        void LimitedCollectorVolunteer::setOrdersLeft(){
+            this->ordersLeft--;
+        }
 
 
 
@@ -192,7 +208,8 @@ using std:: vector;
     }
 
     void  DriverVolunteer::step(){
-        if(decreaseDistanceLeft()){    
+        if(decreaseDistanceLeft()){
+            std::cout << "I finished my job -driver" << endl;    
             this->completedOrderId= this->activeOrderId;
         }
     }
@@ -249,6 +266,10 @@ using std:: vector;
     
     LimitedDriverVolunteer:: ~LimitedDriverVolunteer(){
         
+
+    }
+    void LimitedDriverVolunteer::setOrdersLeft(){
+            this->ordersLeft--;
     }
 
 

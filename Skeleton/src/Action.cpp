@@ -71,6 +71,8 @@ void SimulateStep::act(WareHouse &wareHouse) {
             if(voli->getCompletedOrderId() != NO_ORDER){ // if there's a volunteer that finished handelling an order
                 if (CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
                     wareHouse.frominProcessToPending(coliVoli->getActiveOrderId());
+                    
+                    
                 }
                 else if(DriverVolunteer* deliVoli = dynamic_cast<DriverVolunteer*>(voli)){
                     (wareHouse.getOrder(deliVoli->getActiveOrderId())).setStatus(OrderStatus::COMPLETED);
@@ -84,10 +86,16 @@ void SimulateStep::act(WareHouse &wareHouse) {
                     (wareHouse.getOrder(licoliVoli->getActiveOrderId())).setStatus(OrderStatus::COMPLETED);
                      wareHouse.frominProcessToPending(licoliVoli->getActiveOrderId());
                 }
-            }
-            if(!(voli->hasOrdersLeft())){
+
+                if(!(voli->hasOrdersLeft())){
                 wareHouse.deleteVolunteer(voli);
+                }else{
+                    voli->setActiveOrderId(NO_ORDER); //added this
+                    voli->setCompletedOrderId(NO_ORDER); //added this  
+                }   
             }
+
+
         }
     }    
 }
@@ -357,22 +365,41 @@ PrintVolunteerStatus::PrintVolunteerStatus(int id): volunteerId(id){}
                     else{
                         std::cout << "isBusy: False"<< std::endl;
                         std::cout << "OrderID: None"<<  std::endl;
+
                     }
                     
                     if(LimitedDriverVolunteer* LidriverVoli = dynamic_cast<LimitedDriverVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< LidriverVoli->getDistanceLeft()<< std::endl;
+                        if(LidriverVoli->isBusy()){
+                            std::cout << "TimeLeft: "<< LidriverVoli->getDistanceLeft()<< std::endl;
+                        }else{
+                            std::cout << "TimeLeft: None"<<  std::endl;
+                        }
+                        
                         std::cout << "OrdersLeft:"<< LidriverVoli->getNumOrdersLeft()<< std::endl;
                     }
                     else if(DriverVolunteer* driverVoli = dynamic_cast<DriverVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< driverVoli->getDistanceLeft()<< std::endl;
+                        if(driverVoli->isBusy()){
+                            std::cout << "TimeLeft: "<< driverVoli->getDistanceLeft()<< std::endl;
+                        }else{
+                            std::cout << "TimeLeft: None"<<  std::endl;
+                        }
                         std::cout << "OrdersLeft: no limit"<<  std::endl;
                     }
                     if(LimitedCollectorVolunteer* LicoliVoli = dynamic_cast<LimitedCollectorVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< LicoliVoli->getTimeLeft()<< std::endl;
+                        if(LicoliVoli->isBusy()){
+                            std::cout << "TimeLeft: "<< LicoliVoli->getTimeLeft()<< std::endl;                       
+                        }else{
+                            std::cout << "TimeLeft: None"<<  std::endl;
+                        }
+                      
                         std::cout << "OrdersLeft:"<< LicoliVoli->getNumOrdersLeft()<< std::endl;
                     }
                     else if(CollectorVolunteer* coliVoli = dynamic_cast<CollectorVolunteer*>(voli)){
-                        std::cout << "TimeLeft: "<< coliVoli->getTimeLeft()<< std::endl;
+                        if(coliVoli->isBusy()){
+                            std::cout << "TimeLeft: "<< coliVoli->getTimeLeft()<< std::endl;                       
+                        }else{
+                            std::cout << "TimeLeft: None"<<  std::endl;
+                        }
                         std::cout << "OrdersLeft: no limit"<<  std::endl;
                     }
                    
