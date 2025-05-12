@@ -1,0 +1,7 @@
+This project presents the implementation of a Food Warehouse Management System, developed as part of the Systems Programming course project at Ben-Gurion University.
+The system simulates the daily operations of a warehouse responsible for processing and delivering food orders through the assistance of volunteers. Written in C++, the program is designed using object-oriented principles, incorporating efficient data structures and robust memory management techniques.
+
+The system allows customers to place food orders, which are handled and delivered by volunteers. There are two main categories of volunteers—collectors and drivers—with additional variations that impose specific limitations. The simulation progresses step by step, reflecting the dynamic behavior of warehouse operations. A command-line interface enables interaction with the system through a variety of actions, such as placing orders, retrieving customer or volunteer status, advancing the simulation, viewing logs, and closing the system. Throughout execution, a log is maintained to record the history of all actions performed.
+
+To ensure reliable memory usage, the implementation emphasizes proper dynamic memory handling. This includes the use of smart pointers where appropriate, the definition of correct destructors for all classes, and strict adherence to RAII (Resource Acquisition Is Initialization) principles to prevent memory leaks and ensure resource safety.
+
